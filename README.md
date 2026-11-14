@@ -1,5 +1,5 @@
 # Engineers Compass
-
+<img width="1676" height="1972" alt="engineers_compass_clair" src="https://github.com/user-attachments/assets/df8c9368-d1b5-4e9c-b670-56f4c95f5374" />
 Réseau professionnel pour les élèves ingénieurs, les ingénieurs et les employeurs : fil de publications, défis, offres, réseau de contacts, messagerie, profil vérifié.
 Projet Web — Objectif 3 (développement et intégration des fonctionnalités principales), Sup'Com, année 2025/2026.
 
