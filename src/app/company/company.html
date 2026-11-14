@@ -1,0 +1,104 @@
+@if (c(); as p) {
+  <div class="wrap">
+    <div class="main">
+      <article class="panel head a" style="--i:0">
+        <div class="cover"></div>
+        <div class="body">
+          <div class="top">
+            <span class="logo"><app-icon name="file" /></span>
+            <div class="id">
+              <h1>{{ p.name }} <span class="pill ok"><app-icon name="shield" />Page vérifiée</span></h1>
+              <small>{{ p.line }}</small>
+            </div>
+            <div class="btns">
+              <button type="button" class="btn btn-line btn-sm" [class.on]="following()" [attr.aria-pressed]="following()" (click)="toggleFollow()">
+                <app-icon [name]="following() ? 'check' : 'bell'" />{{ following() ? 'Suivie' : 'Suivre' }}
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" appRipple (click)="tab.set('offers')">Voir les offres</button>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" role="tablist">
+          @for (t of tabs(); track t.id) {
+            <button type="button" role="tab" [class.on]="tab() === t.id" [attr.aria-selected]="tab() === t.id" (click)="tab.set(t.id)">{{ t.label }}</button>
+          }
+        </div>
+      </article>
+
+      @switch (tab()) {
+        @case ('home') {
+          @for (po of p.posts; track po.when; let i = $index) {
+            <article class="panel post a" [style.--i]="i + 1">
+              <header><span class="ico"><app-icon name="file" /></span><div><b>{{ p.name }}</b><small>{{ po.when }} · Public</small></div></header>
+              <p>{{ po.text }}</p>
+              <app-post-actions [postId]="'company-' + p.slug + '-' + i" [item]="postItem(p.name, p.slug, po.text, i)" />
+            </article>
+          } @empty {
+            <section class="panel box a" style="--i:1"><p class="txt">Aucune publication pour le moment.</p></section>
+          }
+        }
+        @case ('about') {
+          <section class="panel box a" style="--i:1"><h2>À propos</h2><p class="txt">{{ p.about }}</p><p class="txt">{{ p.line }}</p></section>
+        }
+        @case ('offers') {
+          <section class="panel box a" style="--i:1">
+            <h2>Offres ouvertes</h2>
+            @for (o of p.offers; track o.id) {
+              <a class="item" [routerLink]="['/offres', o.id]">
+                <span class="ico"><app-icon name="briefcase" /></span>
+                <span><b>{{ o.headline }}</b><small>{{ o.place }} · {{ o.duration }}</small></span>
+                <app-icon class="go" name="chev-right" />
+              </a>
+            } @empty { <p class="txt">Aucune offre ouverte pour le moment.</p> }
+          </section>
+        }
+        @case ('challenges') {
+          <section class="panel box a" style="--i:1">
+            <h2>Défis</h2>
+            @if (p.challenges > 0) {
+              <a class="item" routerLink="/defis"><span class="ico"><app-icon name="target" /></span><span><b>{{ p.challenges }} défi{{ p.challenges > 1 ? 's' : '' }} publié{{ p.challenges > 1 ? 's' : '' }}</b><small>Voir dans la page Défis</small></span><app-icon class="go" name="chev-right" /></a>
+            } @else { <p class="txt">Aucun défi publié.</p> }
+          </section>
+        }
+        @case ('posts') {
+          @for (po of p.posts; track po.when; let i = $index) {
+            <article class="panel post a" [style.--i]="i + 1">
+              <header><span class="ico"><app-icon name="file" /></span><div><b>{{ p.name }}</b><small>{{ po.when }} · Public</small></div></header>
+              <p>{{ po.text }}</p>
+              <app-post-actions [postId]="'company-' + p.slug + '-' + i" [item]="postItem(p.name, p.slug, po.text, i)" />
+            </article>
+          } @empty {
+            <section class="panel box a" style="--i:1"><p class="txt">Aucune publication pour le moment.</p></section>
+          }
+        }
+      }
+    </div>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:1">
+        <h2>Statut de la page</h2>
+        <div class="item"><span class="ico"><app-icon name="shield" /></span><span><b>Vérifiée le {{ p.verified }}</b><small>Aucun avertissement</small></span></div>
+        <div class="stats">
+          <div><b>{{ p.followers }}</b><small>Abonnés</small></div>
+          <div><b>{{ p.offers.length }}</b><small>Offres</small></div>
+          <div><b>{{ p.challenges }}</b><small>Défis</small></div>
+        </div>
+      </section>
+
+      <section class="panel box a" style="--i:2">
+        <h2>Offres ouvertes</h2>
+        @for (o of p.offers; track o.id) {
+          <a class="item" [routerLink]="['/offres', o.id]">
+            <span class="ico"><app-icon name="briefcase" /></span>
+            <span><b>{{ o.headline }}</b><small>{{ o.place }} · {{ o.duration }}</small></span>
+            <app-icon class="go" name="chev-right" />
+          </a>
+        } @empty { <p class="txt">Aucune offre ouverte.</p> }
+      </section>
+
+      <a class="panel box rep a" style="--i:3" routerLink="/signaler">
+        <span class="item"><span class="ico"><app-icon name="flag" /></span><span><b>Un problème avec cette page ?</b><small>Signaler la page</small></span><app-icon class="go" name="chev-right" /></span>
+      </a>
+    </aside>
+  </div>
+}

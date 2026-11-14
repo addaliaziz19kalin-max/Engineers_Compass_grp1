@@ -1,0 +1,155 @@
+<app-auth-shell>
+  <a slot="actions" routerLink="/connexion">Se connecter</a>
+
+  <section class="card wide" [class.shake]="shake()" (animationend)="shake.set(false)" aria-labelledby="t">
+    <h1 id="t" class="a" style="--i:0">Créer votre compte</h1>
+    <p class="sub a" style="--i:1">Rejoignez le réseau des ingénieurs aux profils vérifiés. Aucun abonnement premium.</p>
+
+    <!-- Indicateur d'étapes -->
+    <ol class="steps a" style="--i:2" aria-label="Étapes">
+      @for (s of steps; track s.n) {
+        <li [class.on]="step() === s.n" [class.done]="step() > s.n" [attr.aria-current]="step() === s.n ? 'step' : null">
+          <span class="dot">
+            @if (step() > s.n) { <app-icon name="check" /> } @else { {{ s.n }} }
+          </span>
+          <span class="lbl">{{ s.label }}</span>
+        </li>
+      }
+    </ol>
+
+    <!-- ===== Étape 1 : compte ===== -->
+    <form #f1 class="panel" [class.was-validated]="validated()" [hidden]="step() !== 1" novalidate
+          (submit)="next1($event, f1, pw.value, pw2.value)">
+      <div class="grid2 a" style="--i:3">
+        <div class="field">
+          <label for="fn">Prénom</label>
+          <div class="input"><app-icon name="user" /><input id="fn" required autocomplete="given-name" placeholder="Prénom"></div>
+        </div>
+        <div class="field">
+          <label for="ln">Nom</label>
+          <div class="input"><app-icon name="user" /><input id="ln" required autocomplete="family-name" placeholder="Nom"></div>
+        </div>
+      </div>
+
+      <div class="field a" style="--i:4">
+        <label for="em">Adresse e-mail</label>
+        <div class="input"><app-icon name="mail" /><input id="em" type="email" required autocomplete="email" placeholder="prenom.nom@exemple.com"></div>
+      </div>
+
+      <div class="grid2 a" style="--i:5">
+        <div class="field">
+          <label for="pw">Mot de passe</label>
+          <div class="input">
+            <app-icon name="lock" />
+            <input #pw id="pw" required minlength="6" autocomplete="new-password" [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••••">
+            <button type="button" class="eye" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Masquer' : 'Afficher'">
+              <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" />
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="pw2">Confirmation</label>
+          <div class="input">
+            <app-icon name="lock" />
+            <input #pw2 id="pw2" required autocomplete="new-password" [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••••">
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2 a" style="--i:6">
+        <div class="field">
+          <label for="bd">Date de naissance</label>
+          <div class="input"><app-icon name="calendar" /><input id="bd" type="date" required autocomplete="bday" [max]="today"></div>
+        </div>
+        <div class="field">
+          <label for="co">Pays</label>
+          <div class="input select">
+            <app-icon name="pin" />
+            <select id="co" required>
+              <option>Tunisie</option><option>Algérie</option><option>Maroc</option>
+              <option>France</option><option>Canada</option><option>Autre</option>
+            </select>
+            <app-icon class="chev" name="chev-down" />
+          </div>
+        </div>
+      </div>
+
+      <label class="check terms a" style="--i:7">
+        <input type="checkbox" required>
+        <span class="box" aria-hidden="true"><app-icon name="check" /></span>
+        <span>J’accepte les <a href="#">conditions d’utilisation</a> et la <a href="#">politique de confidentialité</a>.</span>
+      </label>
+
+      @if (error() && step() === 1) { <p class="msg block" role="alert">{{ error() }}</p> }
+
+      <button class="btn btn-primary a" style="--i:8" type="submit" appRipple>Continuer <app-icon name="chev-right" /></button>
+    </form>
+
+    <!-- ===== Étape 2 : rôle ===== -->
+    <div class="panel" [hidden]="step() !== 2">
+      <p class="q">Quel est votre rôle sur la plateforme ?</p>
+
+      <div class="roles" role="radiogroup" aria-label="Rôle">
+        @for (r of roles; track r.id; let i = $index) {
+          <label class="role" [class.sel]="role() === r.id" [style.--i]="i">
+            <input type="radio" name="role" [checked]="role() === r.id" (change)="role.set(r.id)">
+            <span class="ico"><app-icon [name]="r.icon" /></span>
+            <span class="txt"><b>{{ r.label }}</b><small>{{ r.hint }}</small></span>
+            <span class="tick"><app-icon name="check" /></span>
+          </label>
+        }
+      </div>
+
+      @if (role() === 'other') {
+        <div class="field other">
+          <label for="other">Précisez votre rôle</label>
+          <div class="input"><app-icon name="user" />
+            <input id="other" placeholder="Ex. : chercheur, enseignant, freelance…" [value]="otherRole()" (input)="otherRole.set($any($event.target).value)">
+          </div>
+        </div>
+      }
+
+      @if (error() && step() === 2) { <p class="msg block" role="alert">{{ error() }}</p> }
+
+      <div class="actions">
+        <button class="btn btn-line" type="button" appRipple (click)="go(1)"><app-icon name="arrow-left" /> Retour</button>
+        <button class="btn btn-primary" type="button" appRipple (click)="next2()">Continuer <app-icon name="chev-right" /></button>
+      </div>
+    </div>
+
+    <!-- ===== Étape 3 : justificatif ===== -->
+    <div class="panel" [hidden]="step() !== 3">
+      <p class="q">{{ proof().title }}</p>
+      <p class="hint">{{ proof().hint }}</p>
+
+      @if (!file()) {
+        <label class="drop" [class.drag]="dragging()"
+               (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="drop($event)">
+          <input #upload type="file" accept="image/*,.pdf" (change)="pick(upload)">
+          <span class="up"><app-icon name="upload" /></span>
+          <b>Glissez votre document ici</b>
+          <small>ou <u>parcourez vos fichiers</u> · JPG, PNG ou PDF · 10 Mo max</small>
+        </label>
+      } @else {
+        <div class="picked">
+          <span class="ico"><app-icon name="file" /></span>
+          <span class="txt"><b>{{ file()!.name }}</b><small>{{ fileSize() }} · prêt à être envoyé</small></span>
+          <button type="button" class="rm" aria-label="Retirer le fichier" (click)="file.set(null)"><app-icon name="x" /></button>
+        </div>
+      }
+
+      <p class="note">Ce document sert uniquement à vérifier votre rôle avant de valider votre profil.</p>
+
+      @if (error() && step() === 3) { <p class="msg block" role="alert">{{ error() }}</p> }
+
+      <div class="actions">
+        <button class="btn btn-line" type="button" appRipple (click)="go(2)"><app-icon name="arrow-left" /> Retour</button>
+        <button class="btn btn-primary" type="button" appRipple [disabled]="loading()" (click)="finish()">
+          @if (loading()) { <span class="spinner" aria-hidden="true"></span> } @else { Terminer <app-icon name="check" /> }
+        </button>
+      </div>
+    </div>
+
+    <p class="foot a" style="--i:9">Vous avez déjà un compte ? <a class="link" routerLink="/connexion">Se connecter</a></p>
+  </section>
+</app-auth-shell>

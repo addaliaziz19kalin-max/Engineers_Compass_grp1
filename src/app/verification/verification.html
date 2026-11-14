@@ -1,0 +1,24 @@
+<div class="wrap">
+  <h1 class="page-title a" style="--i:0">Résultat de la vérification</h1>
+  <p class="page-sub a" style="--i:1">{{ origin() === 'publish' ? 'Résultat du test de connaissance de votre publication.' : origin() === 'page' ? 'Résultat de la vérification de votre page entreprise.' : 'Résultat de l’examen de votre preuve de rôle.' }}</p>
+
+  <section class="panel card a" style="--i:2" [attr.data-state]="state()" role="status">
+    <span class="badge" [class.ok]="state() === 'accepted'" [class.ko]="state() === 'refused'" [class.wait]="state() === 'pending'">
+      <app-icon [name]="view().icon" />
+    </span>
+    <h2>{{ view().title }}</h2>
+    <span class="pill" [class.ok]="state() === 'accepted'" [class.bad]="state() === 'refused'" [class.warn]="state() === 'pending'">{{ view().pill }}</span>
+    <p>{{ view().text }}</p>
+
+    <div class="btns">
+      @if (view().primary.link) {
+        <a class="btn btn-primary" [routerLink]="view().primary.link" appRipple>{{ view().primary.label }}</a>
+      }
+      @if (view().secondary.label) {
+        <a class="btn btn-line" [routerLink]="view().secondary.link" appRipple>{{ view().secondary.label }}</a>
+      }
+    </div>
+  </section>
+
+  <p class="panel note a" style="--i:3"><span class="ico"><app-icon name="lock" /></span>Vos documents sensibles sont chiffrés et supprimés de la vue publique après vérification.</p>
+</div>

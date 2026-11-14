@@ -1,0 +1,22 @@
+.wrap { max-width: 520px; margin: 0 auto; padding: 32px 24px 72px; }
+.page-title { font-size: 22px; }
+.page-sub { font-size: 11px; margin-bottom: 16px; }
+.card { display: grid; justify-items: center; gap: 10px; padding: 28px 24px 22px; text-align: center; }
+.badge { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; font-size: 30px; color: #fff; animation: spinin .6s cubic-bezier(.34,1.56,.64,1) both; }
+.badge app-icon { stroke-width: 2.6; }
+.badge.ok { background: #4fb468; }
+.badge.ko { background: #e5484d; }
+.badge.wait { background: #f0902f; }
+h2 { margin: 8px 0 0; font-size: 17px; font-weight: 800; }
+.pill { font-size: 10.5px; }
+.pill.bad { background: #fde3e3; color: #b3262b; }
+:host-context([data-theme="dark"]) .pill.bad { background: #3a1c1f; color: #f0868a; }
+.card p { margin: 6px 0 4px; max-width: 400px; font-size: 12px; line-height: 1.7; color: var(--text-muted); }
+.btns { display: grid; width: 100%; gap: 10px; margin-top: 10px; }
+.btns .btn { width: 100%; height: 38px; font-size: 12.5px; text-decoration: none; border-radius: 8px; }
+.note { display: flex; align-items: center; gap: 12px; margin: 14px 0 0; padding: 12px 14px; font-size: 11px; color: var(--text-muted); }
+.ico { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 8px; font-size: 15px; background: var(--badge-bg); color: var(--badge-fg); }
+.preview { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 22px; }
+.preview small { font-size: 11px; }
+.preview button { padding: 4px 12px; border: 1px solid var(--border); border-radius: 999px; background: none; font: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+.preview button.on { border-color: var(--accent); color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 14%, transparent); }

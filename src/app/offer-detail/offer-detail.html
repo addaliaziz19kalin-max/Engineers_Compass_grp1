@@ -1,0 +1,64 @@
+@if (offer(); as o) {
+  <div class="wrap">
+    <div class="main">
+      <article class="panel head a" style="--i:0">
+        <div class="cover"></div>
+        <div class="body">
+          <div class="co">
+            <span class="logo"><app-icon name="file" /></span>
+            <div>
+              <b><a class="lnk" [routerLink]="['/page', slug(o.company)]">{{ o.company }}</a></b>
+              <span class="pill ok"><app-icon name="shield" />Page vérifiée</span>
+            </div>
+          </div>
+
+          <h1>{{ o.headline }}</h1>
+          <p class="meta">
+            <span><app-icon name="pin" />{{ o.place }} · {{ o.mode }}</span>
+            <span><app-icon name="clock" />{{ o.duration }}</span>
+            <span><app-icon name="calendar" />{{ o.posted }}</span>
+          </p>
+          <div class="tags">
+            @for (t of o.tags; track t; let i = $index) { <span class="pill" [class.ok]="i === 0">{{ t }}</span> }
+          </div>
+        </div>
+      </article>
+
+      <section class="panel box a" style="--i:1">
+        <h2>Description du poste</h2>
+        <p class="desc">{{ o.description }}</p>
+        <hr>
+        <h2>Profil recherché</h2>
+        <ul class="reqs">
+          @for (r of o.requirements; track r) { <li><app-icon name="check" />{{ r }}</li> }
+        </ul>
+      </section>
+    </div>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:2">
+        <h2>Postuler</h2>
+        <p class="hint">La candidature est envoyée via la page de l’entreprise. Votre profil vérifié est joint automatiquement.</p>
+        <button type="button" class="btn btn-primary" appRipple [disabled]="applied()" (click)="apply()">
+          {{ applied() ? 'Candidature envoyée' : 'Postuler via la page entreprise' }}
+        </button>
+        <button type="button" class="btn btn-line" appRipple [class.on]="isSaved()" [attr.aria-pressed]="isSaved()" (click)="toggleSave()">
+          <app-icon name="bookmark" />{{ isSaved() ? 'Offre enregistrée' : 'Enregistrer l’offre' }}
+        </button>
+        <div class="foot"><small>{{ o.candidates + (applied() ? 1 : 0) }} candidats</small><small>Clôture : {{ o.deadline }}</small></div>
+      </section>
+
+      <section class="panel box a" style="--i:3">
+        <h2>Offres similaires</h2>
+        @for (s of similar(); track s.id) {
+          <a class="sim" [routerLink]="['/offres', s.id]">
+            <span class="ico"><app-icon name="briefcase" /></span>
+            <span><b>{{ s.title }}</b><small>{{ s.company }} · {{ s.place }}</small></span>
+          </a>
+        } @empty {
+          <p class="hint">Aucune autre offre pour le moment.</p>
+        }
+      </section>
+    </aside>
+  </div>
+}

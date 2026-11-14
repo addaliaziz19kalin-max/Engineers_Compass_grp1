@@ -1,0 +1,9 @@
+.badge {
+  width: 54px; height: 54px; margin: 0 auto 18px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 22px;
+  background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent-ink);
+  transition: background-color .3s, color .3s, transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.badge.ok { background: var(--accent); color: var(--on-accent); transform: scale(1.08); }
+.left { text-align: left; }
+.pop-in { animation: pop .5s cubic-bezier(.2,.8,.2,1) both; }

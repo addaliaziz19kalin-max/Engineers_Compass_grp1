@@ -1,0 +1,32 @@
+.wrap { max-width: 1000px; margin: 0 auto; padding: 28px 24px 72px; display: grid; grid-template-columns: minmax(0, 1fr) 266px; gap: 20px; align-items: start; }
+.main, .side { display: grid; gap: 16px; min-width: 0; }
+.head { overflow: hidden; padding: 0; }
+.cover { height: 106px; background: linear-gradient(100deg, #12335a 0%, #1f6a86 55%, #4aa86a 100%); }
+.body { position: relative; padding: 0 20px 20px; }
+.ava { width: 72px; height: 72px; margin-top: -36px; font-size: 22px; border: 4px solid var(--card); box-sizing: content-box; }
+.btns { position: absolute; top: 12px; right: 20px; display: flex; gap: 10px; }
+.btns .btn { width: auto; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; height: 34px; }
+.btns .btn:disabled { opacity: .6; cursor: default; }
+h1 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 12px 0 6px; font-size: 18px; font-weight: 800; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; }
+.role { margin: 0 0 6px; font-size: 13px; color: var(--text-muted); }
+.loc { display: flex; align-items: center; gap: 5px; margin: 0; font-size: 11px; color: var(--text-muted); }
+.box { display: grid; gap: 10px; padding: 18px; }
+.box h2 { margin: 0; font-size: 14px; font-weight: 800; }
+.about { margin: 0; font-size: 12.5px; line-height: 1.75; color: var(--text-muted); }
+.proj { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.proj:last-child { border-bottom: 0; }
+.proj div { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.proj b { font-size: 12.5px; }
+.proj small { font-size: 11px; }
+.ico { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border-radius: 10px; font-size: 17px; background: var(--badge-bg); color: var(--badge-fg); }
+:host-context([data-theme="dark"]) .ico { background: #16341f; color: #6fd08a; }
+.score { display: flex; align-items: baseline; gap: 8px; margin: 0; }
+.score b { font-size: 30px; font-weight: 800; color: var(--accent-ink); }
+.score span { font-size: 12px; color: var(--text-muted); }
+.box small { font-size: 11px; line-height: 1.5; }
+.skills { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } .btns { position: static; margin-top: 12px; } }
+
+/* états vides */
+.none { margin: 0; font-size: 12.5px; color: var(--text-muted); }

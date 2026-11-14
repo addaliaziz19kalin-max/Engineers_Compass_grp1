@@ -1,0 +1,49 @@
+<app-auth-shell>
+  <section class="card" [class.shake]="shake()" (animationend)="shake.set(false)" aria-labelledby="t">
+    <h1 id="t" class="a" style="--i:0">Connexion</h1>
+    <p class="sub a" style="--i:1">Retrouvez votre réseau d’ingénieurs vérifiés.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field a" style="--i:2">
+        <label for="email">Adresse e-mail</label>
+        <div class="input" [class.err]="invalid('email')">
+          <app-icon name="mail" />
+          <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="prenom.nom@exemple.com">
+        </div>
+        @if (invalid('email')) { <p class="msg" role="alert">Saisissez une adresse e-mail valide.</p> }
+      </div>
+
+      <div class="field a" style="--i:3">
+        <label for="password">Mot de passe</label>
+        <div class="input" [class.err]="invalid('password')">
+          <app-icon name="lock" />
+          <input id="password" formControlName="password" autocomplete="current-password"
+                 [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••••">
+          <button type="button" class="eye" (click)="showPassword.set(!showPassword())"
+                  [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'">
+            <app-icon [name]="showPassword() ? 'eye-off' : 'eye'" />
+          </button>
+        </div>
+        @if (invalid('password')) { <p class="msg" role="alert">Le mot de passe doit contenir au moins 6 caractères.</p> }
+      </div>
+
+      @if (error()) { <p class="msg block" role="alert">{{ error() }}</p> }
+
+      <div class="row a" style="--i:4">
+        <label class="check">
+          <input type="checkbox" formControlName="remember">
+          <span class="box" aria-hidden="true"><app-icon name="check" /></span>
+          Rester connecté
+        </label>
+        <a class="link-anim" routerLink="/mot-de-passe-oublie">Mot de passe oublié ?</a>
+      </div>
+
+      <button class="btn btn-primary a" style="--i:5" type="submit" appRipple [disabled]="loading()">
+        @if (loading()) { <span class="spinner" aria-hidden="true"></span> } @else { Se connecter }
+      </button>
+    </form>
+
+    <div class="or a" style="--i:6"><span>ou</span></div>
+    <a class="btn btn-soft a" style="--i:7" routerLink="/inscription" appRipple>Créer un compte</a>
+  </section>
+</app-auth-shell>

@@ -1,0 +1,47 @@
+<div class="wrap">
+  <div class="main">
+    <h1 class="page-title a" style="--i:0">Signaler un problème</h1>
+    <p class="page-sub a" style="--i:1">Dites-nous ce qui ne fonctionne pas ou ce qui vous semble suspect.</p>
+
+    <form class="panel form a" style="--i:2" (submit)="$event.preventDefault(); send()">
+      <p class="lbl">Type de problème</p>
+      <div class="types" role="radiogroup" aria-label="Type de problème">
+        @for (t of types; track t.id) {
+          <button type="button" role="radio" [attr.aria-checked]="type() === t.id" [class.on]="type() === t.id" (click)="type.set(t.id)">
+            <app-icon [name]="t.icon" />{{ t.label }}
+          </button>
+        }
+      </div>
+
+      <label class="lbl" for="place">Où est-ce arrivé ?</label>
+      <div class="select">
+        <select id="place" [value]="place()" (change)="place.set($any($event.target).value)">
+          @for (p of places; track p) { <option [selected]="p === place()">{{ p }}</option> }
+        </select>
+        <app-icon name="chev-down" />
+      </div>
+
+      <label class="lbl" for="desc">Description</label>
+      <textarea id="desc" rows="5" placeholder="Expliquez ce qui s’est passé et ce que vous attendiez…" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
+
+      <p class="lbl">Capture d’écran (facultatif)</p>
+      <label class="drop">
+        <input type="file" accept="image/*" (change)="pick($any($event.target))">
+        <app-icon name="upload" />{{ file()?.name ?? 'Ajouter une image' }}
+      </label>
+
+      @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+      @if (sent()) { <p class="ok" role="status"><app-icon name="check" />Merci, votre signalement a été envoyé.</p> }
+
+      <div class="actions">
+        <button type="button" class="btn btn-line btn-sm" appRipple (click)="cancel()">Annuler</button>
+        <button type="submit" class="btn btn-primary btn-sm" appRipple [disabled]="sent()">Envoyer le signalement</button>
+      </div>
+    </form>
+  </div>
+
+  <aside class="panel after a" style="--i:3">
+    <div class="head"><span class="ico"><app-icon name="shield" /></span><h2>Après l’envoi</h2></div>
+    <p>L’équipe examine chaque signalement. Les contenus suspects peuvent entraîner un avertissement ou la suppression du compte ou de la page concernée.</p>
+  </aside>
+</div>

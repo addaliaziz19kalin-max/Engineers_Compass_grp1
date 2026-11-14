@@ -1,0 +1,45 @@
+<button type="button" class="trigger" [class.icon]="variant() === 'icon'" [class.on]="open()" [attr.aria-expanded]="open()"
+        [attr.aria-label]="variant() === 'icon' ? 'Partager' : null" [attr.title]="variant() === 'icon' ? 'Partager' : null" (click)="toggle($event)">
+  <app-icon name="share" />@if (variant() === 'act') { Partager }
+</button>
+
+@if (open()) {
+  <div class="pop" [class.end]="align() === 'end'" role="menu" (click)="$event.stopPropagation()">
+    @if (mode() === 'menu') {
+      @if (repost()) {
+        <button type="button" role="menuitem" (click)="shareNow()">
+          <app-icon name="share" /><span><b>Partager maintenant</b><small>Public · sur votre fil</small></span>
+        </button>
+      }
+      <button type="button" role="menuitem" (click)="mode.set('send')">
+        <app-icon name="send" /><span><b>{{ sendLabel() }}</b><small>À un groupe ou un contact</small></span>
+      </button>
+      <button type="button" role="menuitem" (click)="copyLink()">
+        <app-icon name="copy" /><span><b>Copier le lien</b><small>Coller où vous voulez</small></span>
+      </button>
+    } @else {
+      <p class="pop-h"><button type="button" class="back" aria-label="Retour" (click)="mode.set('menu')"><app-icon name="chev-right" /></button>Envoyer à</p>
+      <div class="list">
+        @if (groups().length) { <p class="cap">Groupes</p> }
+        @for (t of groups(); track t.key) {
+          <div class="to">
+            <span class="avatar">{{ t.initials }}</span>
+            <b>{{ t.name }}</b>
+            <button type="button" class="send" [class.done]="sentTo().includes(t.key)" (click)="sendTo(t)">{{ sentTo().includes(t.key) ? 'Envoyé' : 'Envoyer' }}</button>
+          </div>
+        }
+        @if (contacts().length) { <p class="cap">Contacts</p> }
+        @for (t of contacts(); track t.key) {
+          <div class="to">
+            <span class="avatar">{{ t.initials }}</span>
+            <b>{{ t.name }}</b>
+            <button type="button" class="send" [class.done]="sentTo().includes(t.key)" (click)="sendTo(t)">{{ sentTo().includes(t.key) ? 'Envoyé' : 'Envoyer' }}</button>
+          </div>
+        }
+        @if (!groups().length && !contacts().length) {
+          <p class="none">Aucun contact ni groupe pour le moment. Ajoutez des contacts depuis Mon réseau pour leur envoyer des publications.</p>
+        }
+      </div>
+    }
+  </div>
+}

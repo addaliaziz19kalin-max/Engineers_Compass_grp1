@@ -1,0 +1,61 @@
+<div class="wrap">
+  <div class="main">
+    <h1 class="page-title a" style="--i:0">Modifier le profil</h1>
+    <p class="page-sub a" style="--i:1">Votre nom, votre titre, votre présentation et vos expériences.</p>
+
+    <form class="panel form a" style="--i:2" (submit)="$event.preventDefault(); save()">
+      <div class="fields">
+        <div class="field">
+          <label for="p-name">Nom et prénom</label>
+          <span class="input">
+            <app-icon name="user" />
+            <input id="p-name" type="text" placeholder="Prénom Nom" [value]="name()" (input)="name.set($any($event.target).value)" autocomplete="off">
+          </span>
+        </div>
+        <div class="field">
+          <label for="p-role">Titre</label>
+          <span class="input">
+            <app-icon name="graduation" />
+            <input id="p-role" type="text" placeholder="Élève ingénieur · Télécoms" [value]="role()" (input)="role.set($any($event.target).value)" autocomplete="off">
+          </span>
+        </div>
+      </div>
+
+      <label class="lbl" for="p-about">À propos</label>
+      <textarea id="p-about" rows="3" placeholder="Présentez-vous en quelques lignes…" [value]="about()" (input)="about.set($any($event.target).value)"></textarea>
+
+      <p class="lbl">Rôles et expériences</p>
+      @for (e of entries(); track e.id) {
+        <div class="entry">
+          <div class="entry-h">
+            <span class="kind"><app-icon [name]="kind(e.kind).icon" />{{ kind(e.kind).label }}</span>
+            <button type="button" class="rm" aria-label="Supprimer cet élément" title="Supprimer" (click)="remove(e.id)"><app-icon name="trash" /></button>
+          </div>
+          <span class="input">
+            <app-icon [name]="kind(e.kind).icon" />
+            <input type="text" aria-label="Titre" [value]="e.title" (input)="setEntry(e.id, 'title', $any($event.target).value)" autocomplete="off">
+          </span>
+          <span class="input">
+            <app-icon name="file" />
+            <input type="text" aria-label="Détails" [value]="e.sub" (input)="setEntry(e.id, 'sub', $any($event.target).value)" autocomplete="off">
+          </span>
+        </div>
+      } @empty {
+        <p class="none">Aucun élément. Vous pouvez en ajouter depuis votre profil.</p>
+      }
+
+      @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+      @if (done()) { <p class="ok" role="status"><app-icon name="check" />Profil mis à jour.</p> }
+
+      <div class="actions">
+        <button type="button" class="btn btn-line btn-sm" appRipple (click)="cancel()">Annuler</button>
+        <button type="submit" class="btn btn-primary btn-sm" appRipple [disabled]="done()">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+
+  <aside class="panel after a" style="--i:3">
+    <div class="head"><span class="ico"><app-icon name="lock" /></span><h2>Visible uniquement par vous</h2></div>
+    <p>Seul le propriétaire du compte voit « Modifier le profil ». Les visiteurs de votre profil ne peuvent rien modifier : ils voient seulement le résultat.</p>
+  </aside>
+</div>

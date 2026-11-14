@@ -1,0 +1,69 @@
+@if (m(); as p) {
+  <div class="wrap">
+    <div class="main">
+      <article class="panel head a" style="--i:0">
+        <div class="cover"></div>
+        <div class="body">
+          <span class="avatar ava">{{ p.initials }}</span>
+          <div class="btns">
+            <button type="button" class="btn btn-line btn-sm" (click)="message()"><app-icon name="send" />Message</button>
+            @if (isContact()) {
+              <button type="button" class="btn btn-line btn-sm" disabled><app-icon name="check" />Dans mes contacts</button>
+            } @else if (invitation()) {
+              <button type="button" class="btn btn-primary btn-sm" appRipple (click)="accept()"><app-icon name="user-plus" />Accepter</button>
+            } @else {
+              <button type="button" class="btn btn-primary btn-sm" appRipple [disabled]="requested()" (click)="connect()">
+                <app-icon [name]="requested() ? 'check' : 'user-plus'" />{{ requested() ? 'Demande envoyée' : 'Se connecter' }}
+              </button>
+            }
+          </div>
+          <h1>{{ p.name }} <span class="pill ok"><app-icon name="shield" />{{ p.badge }}</span></h1>
+          <p class="role">{{ p.headline }}</p>
+          <p class="loc"><app-icon name="pin" />{{ p.place ? p.place + ' · ' : '' }}{{ p.mutual }} contact{{ p.mutual > 1 ? 's' : '' }} en commun</p>
+        </div>
+      </article>
+
+      <section class="panel box a" style="--i:1">
+        <h2>À propos</h2>
+        @if (p.about) { <p class="about">{{ p.about }}</p> } @else { <p class="about none">Aucune présentation pour le moment.</p> }
+      </section>
+
+      <section class="panel box a" style="--i:2">
+        <h2>Projets validés</h2>
+        @for (pr of p.projects; track pr.title) {
+          <div class="proj">
+            <span class="ico"><app-icon name="target" /></span>
+            <div><b>{{ pr.title }}</b><small>{{ pr.tech }}</small></div>
+            <span class="pill ok"><app-icon name="shield" />{{ pr.score }} %</span>
+          </div>
+        } @empty {
+          <p class="none">Aucun projet validé pour le moment.</p>
+        }
+      </section>
+    </div>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:1">
+        <h2>Score de confiance</h2>
+        <p class="score"><b>{{ p.score }}</b><span>/ 100</span></p>
+        <div class="progress"><i [style.width.%]="p.score"></i></div>
+        <small>Rôle vérifié, projets validés et contributions reconnues.</small>
+      </section>
+
+      <section class="panel box a" style="--i:2">
+        <h2>Compétences vérifiées</h2>
+        <div class="skills">
+          @for (s of p.skills; track s) { <span class="pill ok"><app-icon name="check" />{{ s }}</span> } @empty { <p class="none">Aucune compétence vérifiée pour le moment.</p> }
+        </div>
+      </section>
+
+      <section class="panel box a" style="--i:3">
+        <h2>Activité</h2>
+        <div class="proj">
+          <span class="ico"><app-icon name="award" /></span>
+          <div><b>{{ p.solutions }} solution{{ p.solutions > 1 ? 's' : '' }} proposée{{ p.solutions > 1 ? 's' : '' }}</b><small>dans les défis de la communauté</small></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+}

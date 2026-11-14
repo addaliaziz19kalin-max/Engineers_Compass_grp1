@@ -1,0 +1,121 @@
+<div class="feed">
+  <div class="layout">
+    <!-- ===== Colonne gauche ===== -->
+    <aside class="side">
+      <a class="panel prof a" style="--i:0" routerLink="/profil">
+        <span class="avatar lg">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</span>
+        <div><b>{{ profile.info().name }}</b><small>{{ user.badge() }}</small></div>
+      </a>
+
+      <nav class="panel menu a" style="--i:1" aria-label="Menu du compte">
+        @for (m of menu; track m.label) {
+          <a [routerLink]="m.link ?? '/fil'"><app-icon [name]="m.icon" />{{ m.label }}</a>
+        }
+        <!-- employeur : créer sa page entreprise, puis y accéder -->
+        @if (user.isEmployer()) {
+          @if (mine.page()) {
+            <a routerLink="/ma-page"><app-icon name="file" />Ma page</a>
+          } @else {
+            <a routerLink="/creer-page"><app-icon name="plus" />Créer une page</a>
+          }
+        }
+        <p class="cap">Compte</p>
+
+        <a routerLink="/parametres/compte"><app-icon name="user" />Paramètres du compte<app-icon class="go" name="chev-right" /></a>
+        @for (m of account; track m.label) {
+          @if (m.link) {
+            <a [routerLink]="m.link"><app-icon [name]="m.icon" />{{ m.label }}<app-icon class="go" name="chev-right" /></a>
+          } @else {
+            <a href="#" (click)="$event.preventDefault()"><app-icon [name]="m.icon" />{{ m.label }}<app-icon class="go" name="chev-right" /></a>
+          }
+        }
+        <p class="cap">Assistance</p>
+        <a routerLink="/signaler"><app-icon name="flag" />Signaler un problème<app-icon class="go" name="chev-right" /></a>
+        <a routerLink="/aide"><app-icon name="help" />Centre d’aide</a>
+      </nav>
+    </aside>
+
+    <!-- ===== Fil ===== -->
+    <main class="col">
+      <h1 class="a" style="--i:1">Pour vous</h1>
+
+      <div class="panel compose a" style="--i:2">
+        <div class="compose-top">
+          <span class="avatar">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</span>
+          <input type="text" readonly placeholder="Partager un projet, une image…" aria-label="Créer une publication" (focus)="newPost()" (click)="newPost()">
+        </div>
+        <div class="compose-actions">
+          <button type="button" (click)="newPost()"><app-icon name="image" />Photo</button>
+          <button type="button" (click)="newPost()"><app-icon name="video" />Vidéo</button>
+          <button type="button" class="cert" (click)="newPost()"><app-icon name="award" />Certificat</button>
+        </div>
+      </div>
+
+      @for (p of posts.items(); track p.id) {
+        <article class="panel post a" style="--i:2" [attr.id]="'feed-' + p.id" [class.hl]="focus() === p.id">
+          <header>
+            <a class="avatar" routerLink="/profil">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</a>
+            <div>
+              <b><a class="lnk" routerLink="/profil">{{ profile.info().name }}</a> <i class="ver" title="Profil vérifié"><app-icon name="check" /></i></b>
+              <small>{{ p.label }}</small>
+              <small>{{ ago(p.at) }} · Public</small>
+            </div>
+          </header>
+          @if (p.text) { <p>{{ p.text }}</p> }
+          @if (p.title) {
+            <a class="ref" [routerLink]="p.link ?? '/fil'" [queryParams]="p.query"><b>{{ p.title }}</b>@if (p.sub) { <small>{{ p.sub }}</small> }</a>
+          }
+          <app-post-actions [postId]="p.id" [item]="myItemOf(p)" variant="feed" />
+        </article>
+      }
+
+      @for (p of feed.posts; track p.id; let i = $index) {
+        <article class="panel post a" [style.--i]="i + 3" [attr.id]="'feed-' + p.id" [class.hl]="focus() === p.id">
+          <header>
+            <a class="avatar" [routerLink]="p.author.link">
+              @if (p.author.mine) { @if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} } } @else { {{ p.author.initials }} }
+            </a>
+            <div>
+              <b><a class="lnk" [routerLink]="p.author.link">{{ p.author.mine ? profile.info().name : p.author.name }}</a> <i class="ver" title="Profil vérifié"><app-icon name="check" /></i></b>
+              <small>{{ p.author.mine ? profile.info().role : p.author.role }}</small>
+              <small>{{ p.when }} · Public</small>
+            </div>
+          </header>
+          <p>{{ p.text }}</p>
+          @if (p.chip) {
+            <figure class="media">
+              <span class="grid-bg"></span>
+              <span class="chip"><app-icon name="check" />{{ p.chip }}</span>
+            </figure>
+          }
+          @if (p.ref; as r) {
+            <a class="ref" [routerLink]="r.link"><b>{{ r.title }}</b><small>{{ r.sub }}</small></a>
+          }
+          <app-post-actions [postId]="p.id" [baseLikes]="p.baseLikes" [seed]="p.seed" [item]="itemOf(p)" variant="feed" />
+        </article>
+      }
+      @if (posts.items().length === 0 && feed.posts.length === 0) {
+        <section class="panel empty a" style="--i:3">
+          <b>Aucune publication pour le moment</b>
+          <small>Partagez un projet ou un certificat : votre première publication apparaîtra ici.</small>
+        </section>
+      }
+    </main>
+
+    <!-- ===== Colonne droite ===== -->
+    <aside class="side right">
+      <section class="panel suggest a" style="--i:3">
+        <h3>Profils à suivre</h3>
+        @for (p of follow; track p.name) {
+          <div class="who">
+            <a class="avatar sm" [routerLink]="['/membre', slug(p.name)]">{{ p.ini }}</a>
+            <div><b><a class="lnk" [routerLink]="['/membre', slug(p.name)]">{{ p.name }}</a></b><small>{{ p.role }}</small></div>
+            <button type="button" class="btn-follow" [class.on]="followed().includes(p.name)" [attr.aria-pressed]="followed().includes(p.name)" (click)="toggleFollow(p.name)">{{ followed().includes(p.name) ? 'Suivi' : 'Suivre' }}</button>
+          </div>
+        } @empty {
+          <p class="none">Aucune suggestion pour le moment.</p>
+        }
+      </section>
+    </aside>
+  </div>
+</div>

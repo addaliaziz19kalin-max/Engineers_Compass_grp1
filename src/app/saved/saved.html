@@ -1,0 +1,24 @@
+<div class="wrap">
+  <h1 class="page-title a" style="--i:0">Enregistrés</h1>
+  <p class="page-sub a" style="--i:1">Publications, offres et défis que vous avez mis de côté.</p>
+
+  <section class="panel box a" style="--i:2">
+    @for (s of saved.items(); track s.id; let i = $index) {
+      <article class="row" [style.--i]="i">
+        <span class="ico"><app-icon name="bookmark" /></span>
+        <a class="txt" [routerLink]="s.link">
+          <b>{{ s.title }}</b>
+          <small>{{ kinds[s.kind] }} · {{ s.sub }}</small>
+        </a>
+        <button type="button" class="rm" (click)="saved.remove(s.id)" aria-label="Retirer des enregistrés"><app-icon name="x" /></button>
+      </article>
+    } @empty {
+      <div class="empty">
+        <span class="ico big"><app-icon name="bookmark" /></span>
+        <b>Rien d’enregistré pour l’instant</b>
+        <small>Touchez « Enregistrer » sous une publication pour la retrouver ici.</small>
+        <a class="btn btn-primary btn-sm" routerLink="/fil">Retour au fil</a>
+      </div>
+    }
+  </section>
+</div>

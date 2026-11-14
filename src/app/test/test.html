@@ -1,0 +1,30 @@
+<div class="wrap">
+  <h1 class="page-title a" style="--i:0">Test de connaissance</h1>
+  <p class="page-sub a" style="--i:1">Pour publier votre {{ type.toLowerCase() }}, répondez à {{ questions.length }} questions sur « {{ topic }} ». Score minimum : {{ pass }} %.</p>
+
+  <section class="panel box a" style="--i:2">
+    <div class="meta">
+      <span>Question {{ index() + 1 }} / {{ questions.length }}</span>
+      <span class="pill"><app-icon name="clock" />Sans limite de temps</span>
+    </div>
+    <div class="progress"><i [style.width.%]="((index() + 1) / questions.length) * 100"></i></div>
+
+    <h2>{{ current().q }}</h2>
+    <div class="opts" role="radiogroup" [attr.aria-label]="current().q">
+      @for (o of current().options; track o; let i = $index) {
+        <button type="button" role="radio" [attr.aria-checked]="picked()[index()] === i" [class.on]="picked()[index()] === i" (click)="choose(i)">
+          <i></i>{{ o }}
+        </button>
+      }
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-line btn-sm" routerLink="/publier" appRipple>Quitter</a>
+      <span class="sp"></span>
+      <button type="button" class="btn btn-line btn-sm" appRipple [disabled]="index() === 0" (click)="back()">Précédent</button>
+      <button type="button" class="btn btn-primary btn-sm" appRipple [disabled]="picked()[index()] === null" (click)="next()">
+        {{ isLast() ? 'Terminer le test' : 'Suivant' }}
+      </button>
+    </div>
+  </section>
+</div>

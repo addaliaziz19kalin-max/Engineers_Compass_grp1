@@ -1,0 +1,70 @@
+<div class="wrap">
+  <h1 class="page-title a" style="--i:0">Créer une publication</h1>
+
+  <div class="grid">
+    <section class="panel form a" style="--i:1">
+      <div class="author">
+        <span class="avatar lg">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</span>
+        <div>
+          <b>{{ profile.info().name }}</b>
+          <span class="vis"><app-icon name="globe" />Public<app-icon name="chev-down" /></span>
+        </div>
+      </div>
+
+      <textarea class="text" rows="5" placeholder="Partagez un projet, un certificat, un article ou une question…"
+                aria-label="Texte de la publication" [value]="text()" (input)="text.set($any($event.target).value)"></textarea>
+
+      <p class="lbl">Type de contenu</p>
+      <div class="chips">
+        @for (t of types; track t) {
+          <button type="button" [class.on]="type() === t" (click)="type.set(t)">
+            @if (type() === t) { <i class="dot"></i> } @else {
+              <app-icon [name]="t === 'Certificat' ? 'award' : t === 'Article' ? 'file' : 'help'" />
+            }{{ t }}
+          </button>
+        }
+      </div>
+
+      @if (needsTest()) {
+        <p class="lbl">Sujet du test (les questions porteront sur ce sujet)</p>
+        <div class="chips">
+          @for (t of topics; track t.id) {
+            <button type="button" [class.on]="topic() === t.id" (click)="topic.set(t.id)">
+              @if (topic() === t.id) { <i class="dot"></i> }{{ t.label }}
+            </button>
+          }
+        </div>
+      }
+
+      <div class="bottom">
+        <div class="go">
+          <button type="button" class="btn btn-line btn-sm" appRipple (click)="draft()">Enregistrer le brouillon</button>
+          <button type="button" class="btn btn-primary btn-sm" appRipple (click)="launch()">{{ needsTest() ? 'Lancer la vérification' : 'Publier' }}</button>
+        </div>
+      </div>
+      @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+      @if (sent()) { <p class="sent" role="status"><app-icon name="check" />Publié — retour au fil…</p> }
+    </section>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:2">
+        <h2>Contrôle automatique</h2>
+        @for (c of checks(); track c.title) {
+          <div class="chk">
+            <span class="ico" [class.warn]="c.warn"><app-icon [name]="c.icon" /></span>
+            <div><b>{{ c.title }}</b><small>{{ c.sub }}</small></div>
+          </div>
+        }
+        @if (needsTest()) { <p class="note">La publication ne sera visible qu’après validation du test.</p> }
+      </section>
+
+      <section class="panel box a" style="--i:3">
+        <div class="tips-h">
+          <span class="ico"><app-icon name="sparkle" /></span>
+          <h2>Conseils</h2>
+        </div>
+        <ul>@for (t of tips; track t) { <li>{{ t }}</li> }</ul>
+      </section>
+    </aside>
+  </div>
+</div>

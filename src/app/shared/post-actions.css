@@ -1,0 +1,20 @@
+:host { display: block; }
+.stats { display: flex; justify-content: space-between; padding: 10px 4px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); }
+.cnt { padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+.cnt:hover { color: var(--text); text-decoration: underline; }
+.acts { display: grid; grid-template-columns: repeat(2, 1fr); padding: 2px 0; }
+.acts button {
+  display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 4px; border: 0; border-radius: 10px; background: none; cursor: pointer;
+  font: inherit; font-size: 12.5px; font-weight: 700; color: var(--text-muted); transition: background-color .2s, color .2s;
+}
+.acts button:hover { background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--text); }
+.acts app-icon { font-size: 17px; }
+.acts .liked { color: #e5484d; }
+.acts .liked app-icon { animation: pop .45s cubic-bezier(.34,1.56,.64,1); fill: currentColor; }
+.acts.four { grid-template-columns: repeat(4, 1fr); }
+.acts .saved { color: var(--accent-ink); }
+.acts .saved app-icon { fill: currentColor; animation: pop .45s cubic-bezier(.34,1.56,.64,1); }
+
+/* présentation du fil : compteurs au-dessus d'un trait, puis les boutons */
+:host(.feed) .stats { padding: 12px 4px 10px; border-top: 0; border-bottom: 1px solid var(--border); }
+:host(.feed) .acts { padding: 4px 0; }

@@ -1,0 +1,135 @@
+/* Styles communs : carte, champs, boutons (importés par login, forgot, signup) */
+:host { display: block; }
+
+.card {
+  width: 100%; max-width: 408px;
+  padding: 32px 31px 30px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--card-shadow);
+  animation: pop .7s cubic-bezier(.2,.8,.2,1) both;
+}
+.card.wide { max-width: 568px; }
+.card.shake { animation: shake .45s cubic-bezier(.36,.07,.19,.97); }
+
+/* apparition en cascade (variable --i) */
+.a { animation: rise .7s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i, 0) * 70ms + 150ms); }
+
+h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+.sub { margin: 10px 0 22px; font-size: 13px; line-height: 1.55; color: var(--text-muted); }
+.center { text-align: center; }
+
+/* ---------- champs ---------- */
+.field { margin-bottom: 16px; min-width: 0; }
+.field > label, .field > .lbl { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; }
+
+.input {
+  display: flex; align-items: center; gap: 10px;
+  height: 46px; padding: 0 14px;
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--text-muted);
+  transition: border-color .2s, box-shadow .25s, background-color .2s, color .2s;
+}
+:host-context([data-theme="dark"]) .input { background: color-mix(in srgb, var(--bg) 70%, #000); border-color: var(--border); }
+.input:hover { border-color: var(--border-strong); }
+.input:focus-within {
+  color: var(--accent-ink); border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.input.err,
+.was-validated .input:has(:invalid) { border-color: #e5484d; box-shadow: 0 0 0 4px color-mix(in srgb, #e5484d 16%, transparent); }
+.input > app-icon { font-size: 17px; }
+.input input, .input select {
+  flex: 1; min-width: 0; height: 100%;
+  background: transparent; border: 0; outline: 0;
+  font: inherit; font-size: 14px; color: var(--text);
+}
+.input input::placeholder { color: var(--text-muted); opacity: .8; }
+.input select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 18px; }
+.input select option { color: #0e1722; }
+.input.select { position: relative; }
+.input.select .chev { position: absolute; right: 12px; font-size: 15px; pointer-events: none; }
+.input input[type="date"] { color-scheme: inherit; }
+
+.eye {
+  display: grid; place-items: center; width: 28px; height: 28px; margin-right: -6px; padding: 0; font-size: 17px;
+  background: transparent; border: 0; border-radius: 8px; color: inherit; cursor: pointer;
+  transition: color .15s, transform .15s;
+}
+.eye:hover { color: var(--text); }
+.eye:active { transform: scale(.88); }
+
+.msg { margin: 7px 2px 0; font-size: 12px; font-weight: 600; color: #e5484d; animation: rise .3s ease both; }
+.msg.block { margin: 0 0 14px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+
+/* ---------- case à cocher ---------- */
+.check { position: relative; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); cursor: pointer; user-select: none; }
+.check input { position: absolute; left: 0; top: 50%; width: 18px; height: 18px; margin: -9px 0 0; opacity: 0; cursor: pointer; }
+.check .box {
+  width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; flex: none;
+  border: 1.5px solid var(--border-strong); color: transparent; font-size: 12px;
+  transition: background-color .15s, border-color .15s, transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.check .box app-icon { stroke-width: 3.2; }
+.check input:checked + .box { background: var(--accent); border-color: var(--accent); color: var(--on-accent); transform: scale(1.06); }
+.check input:focus-visible + .box { outline: 2px solid var(--accent); outline-offset: 2px; }
+.was-validated .check input:invalid + .box { border-color: #e5484d; }
+.check a, .link { color: var(--accent-ink); font-weight: 700; }
+.check a:hover, .link:hover { text-decoration: underline; }
+
+.link-anim { position: relative; font-size: 13px; font-weight: 700; color: var(--accent-ink); }
+.link-anim::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; border-radius: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform .3s cubic-bezier(.2,.8,.2,1);
+}
+.link-anim:hover::after { transform: scaleX(1); }
+
+/* ---------- boutons ---------- */
+.btn { width: 100%; height: 48px; border-radius: 12px; font-size: 14px; gap: 6px; }
+.btn app-icon { font-size: 16px; }
+.btn:disabled { cursor: progress; opacity: .9; transform: none; }
+.btn-primary::before {
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+}
+.btn-primary:hover:not(:disabled)::before { animation: shine .8s ease; }
+.btn-soft { background: color-mix(in srgb, var(--accent) 17%, transparent); color: var(--accent-ink); }
+.btn-soft:hover { background: color-mix(in srgb, var(--accent) 27%, transparent); }
+.btn-line { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.btn-line:hover { border-color: var(--text-muted); }
+
+.spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2.5px solid color-mix(in srgb, var(--on-accent) 25%, transparent);
+  border-top-color: var(--on-accent);
+  animation: spin .7s linear infinite;
+}
+
+.or { position: relative; margin: 22px 0; text-align: center; font-size: 12px; color: var(--text-muted); }
+.or::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--border); }
+.or span { position: relative; padding: 0 14px; background: var(--card); }
+
+.back {
+  display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 18px;
+  font-size: 13px; font-weight: 700; color: var(--accent-ink);
+}
+.back app-icon { font-size: 14px; transition: transform .2s; }
+.back:hover app-icon { transform: translateX(-3px); }
+
+@keyframes spin  { to { transform: rotate(360deg); } }
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-6px); }
+  40%, 60% { transform: translateX(6px); }
+}
+
+@media (max-width: 680px) {
+  .card { padding: 26px 22px; }
+  .grid2 { grid-template-columns: 1fr; }
+}

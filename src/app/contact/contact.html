@@ -1,0 +1,69 @@
+<div class="wrap">
+  <div class="main">
+    <h1 class="page-title a" style="--i:0">Contactez-nous</h1>
+    <p class="page-sub a" style="--i:1">Une question, un problème de vérification ou une suggestion ? Notre équipe vous répond sous 48 h.</p>
+
+    <form class="panel form a" style="--i:2" novalidate (submit)="$event.preventDefault(); send()">
+      @if (sent()) {
+        <div class="done" role="status">
+          <span class="ok"><app-icon name="check" /></span>
+          <h2>Message envoyé</h2>
+          <p>Merci ! Notre équipe vous répondra par e-mail sous 48 h.</p>
+          <button type="button" class="btn btn-line btn-sm" (click)="reset()">Envoyer un autre message</button>
+        </div>
+      } @else {
+        <div class="two">
+          <div class="field">
+            <label for="c-name">Nom</label>
+            <span class="input"><app-icon name="user" /><input id="c-name" type="text" placeholder="Prénom Nom" autocomplete="name" [value]="name()" (input)="name.set($any($event.target).value)"></span>
+          </div>
+          <div class="field">
+            <label for="c-mail">E-mail</label>
+            <span class="input"><app-icon name="mail" /><input id="c-mail" type="email" placeholder="prenom.nom@exemple.com" autocomplete="email" [value]="email()" (input)="email.set($any($event.target).value)"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="c-sub">Sujet</label>
+          <span class="input select">
+            <select id="c-sub" (change)="subject.set($any($event.target).value)">
+              @for (s of subjects; track s) { <option [selected]="s === subject()">{{ s }}</option> }
+            </select>
+            <app-icon name="chev-down" />
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="c-msg">Message</label>
+          <textarea id="c-msg" rows="6" placeholder="Décrivez votre demande…" [value]="message()" (input)="message.set($any($event.target).value)"></textarea>
+        </div>
+
+        @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+
+        <div class="foot">
+          <label class="attach"><input type="file" accept="image/*" (change)="pick($any($event.target))"><app-icon name="upload" />{{ file()?.name ?? 'Joindre une capture d’écran (facultatif)' }}</label>
+          <button type="submit" class="btn btn-primary btn-sm" appRipple><app-icon name="send" />Envoyer le message</button>
+        </div>
+      }
+    </form>
+  </div>
+
+  <aside class="side">
+    <section class="panel box a" style="--i:2">
+      <h2>Coordonnées</h2>
+      @for (i of infos; track i.title) {
+        <div class="item"><span class="ico"><app-icon [name]="i.icon" /></span><span><b>{{ i.title }}</b><small>{{ i.text }}</small></span></div>
+      }
+    </section>
+
+    <section class="panel box a" style="--i:3">
+      <h2>Questions fréquentes</h2>
+      @for (q of faq; track q) {
+        <a class="q" routerLink="/aide">{{ q }}<app-icon name="chev-right" /></a>
+      }
+      <button type="button" class="item bot" (click)="assistant.open()">
+        <span class="ico"><app-icon name="message" /></span><small>Réponse immédiate via le chatbot d’assistance.</small>
+      </button>
+    </section>
+  </aside>
+</div>

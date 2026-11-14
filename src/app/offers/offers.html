@@ -1,0 +1,57 @@
+<div class="wrap">
+  <section class="main">
+    <h1 class="page-title a" style="--i:0">Opportunités de carrière</h1>
+    <p class="page-sub a" style="--i:1">Des offres suivies, publiées par des entreprises vérifiées.</p>
+
+    <div class="chips a" style="--i:2" role="tablist" aria-label="Types d'offre">
+      @for (f of filters; track f) {
+        <button type="button" role="tab" [class.on]="filter() === f" [attr.aria-selected]="filter() === f" (click)="filter.set(f)">{{ f }}</button>
+      }
+    </div>
+
+    <div class="list">
+      @for (o of list(); track o.id; let i = $index) {
+        <article class="panel offer" [style.--i]="i" (click)="open(o.id)">
+          <span class="logo-box">{{ o.id }}</span>
+
+          <div class="info">
+            <h2><a [routerLink]="['/offres', o.id]" (click)="$event.stopPropagation()">{{ o.title }} · {{ o.kind }}</a> <span class="pill ok">Vérifiée</span></h2>
+            <small><a class="lnk" [routerLink]="['/page', slug(o.company)]" (click)="$event.stopPropagation()">{{ o.company }}</a></small>
+            <div class="tags">
+              <span class="pill">{{ o.duration }}</span>
+              <span class="pill">{{ o.place }}</span>
+              @if (isApplied(o.id)) { <span class="pill warn sent">Candidature envoyée</span> }
+            </div>
+          </div>
+
+          <div class="side">
+            <small>Réponse sous 7 jours</small>
+            <button type="button" class="btn btn-primary btn-sm" appRipple [disabled]="isApplied(o.id)" (click)="$event.stopPropagation(); apply(o.id)">
+              {{ isApplied(o.id) ? 'Postulé' : 'Postuler' }}
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">Aucune offre dans cette catégorie.</p>
+      }
+    </div>
+  </section>
+
+  <!-- Suivi des candidatures -->
+  <aside class="detail">
+    <section class="panel box a" style="--i:3">
+      <h2>Mes candidatures</h2>
+      @for (a of applications(); track $index) {
+        <div class="app">
+          <b>{{ a.label }}</b>
+          <div class="seg">
+            @for (s of steps; track s; let n = $index) { <i [class.on]="n < a.step"></i> }
+          </div>
+          <div class="seg-lbl">@for (s of steps; track s) { <small>{{ s }}</small> }</div>
+        </div>
+      } @empty {
+        <p class="empty">Aucune candidature pour le moment.</p>
+      }
+    </section>
+  </aside>
+</div>

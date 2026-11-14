@@ -1,0 +1,79 @@
+/* Formulaire d'une page entreprise (créer / modifier) et dépôt du justificatif — partagé par « Créer une page » et « Ma page » */
+.form { padding: 20px 16px; display: grid; gap: 0; }
+.lbl { display: block; margin: 16px 0 8px; font-size: 11px; font-weight: 800; }
+.lbl:first-child { margin-top: 0; }
+.hint { margin: 0 0 14px; font-size: 12px; line-height: 1.5; color: var(--text-muted); }
+
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.field { grid-column: span 2; }
+.field.half { grid-column: span 1; }
+.field label { display: block; margin: 12px 0 8px; font-size: 11px; font-weight: 800; }
+.input { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); transition: border-color .2s, box-shadow .25s; }
+:host-context([data-theme="dark"]) .input { background: color-mix(in srgb, var(--bg) 70%, #000); }
+.input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent); }
+.input app-icon { font-size: 15px; flex: none; }
+.input input, .input select { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 12px; color: var(--text); }
+.input input::placeholder { color: var(--text-muted); }
+.input select { appearance: none; height: 100%; cursor: pointer; }
+.input .chev { font-size: 14px; pointer-events: none; }
+
+textarea {
+  width: 100%; min-height: 80px; padding: 12px; resize: vertical; line-height: 1.5;
+  font: inherit; font-size: 12px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; outline: 0;
+  transition: border-color .2s, box-shadow .25s;
+}
+:host-context([data-theme="dark"]) textarea { background: color-mix(in srgb, var(--bg) 70%, #000); }
+textarea::placeholder { color: var(--text-muted); }
+textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent); }
+
+/* ---------- dépôt du justificatif (même rendu que l'inscription) ---------- */
+.drop {
+  position: relative; display: grid; justify-items: center; gap: 6px; padding: 26px 18px; text-align: center; cursor: pointer;
+  background: var(--bg); border: 1.5px dashed var(--border-strong); border-radius: 16px; color: var(--text-muted);
+  transition: border-color .2s, background-color .2s, transform .2s;
+}
+:host-context([data-theme="dark"]) .drop { background: color-mix(in srgb, var(--bg) 70%, #000); }
+.drop:hover, .drop.drag { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
+.drop.drag { transform: scale(1.015); }
+.drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.drop b { font-size: 13px; color: var(--text); }
+.drop small { font-size: 11px; }
+.drop u { color: var(--accent-ink); text-underline-offset: 3px; }
+.drop .up {
+  width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; margin-bottom: 4px;
+  background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent-ink);
+  animation: bob 2.6s ease-in-out infinite;
+}
+.picked {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg)); border: 1.5px solid var(--accent);
+  animation: pop .45s cubic-bezier(.2,.8,.2,1) both;
+}
+.picked .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; background: var(--accent); color: var(--on-accent); flex: none; }
+.picked .txt { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.picked b { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.picked small { font-size: 11px; color: var(--text-muted); }
+.rm {
+  width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border-radius: 50%; cursor: pointer; font-size: 15px;
+  background: transparent; border: 1px solid var(--border-strong); color: var(--text-muted); transition: color .15s, border-color .15s, transform .2s;
+}
+.rm:hover { color: #e5484d; border-color: #e5484d; transform: rotate(90deg); }
+.note { margin: 12px 2px 0; font-size: 11px; color: var(--text-muted); }
+
+.err { margin: 12px 0 0; font-size: 12px; font-weight: 600; color: #d9534f; }
+.err.shake { animation: shake .4s ease; }
+.ok { display: flex; align-items: center; gap: 6px; margin: 12px 0 0; font-size: 12px; font-weight: 700; color: var(--accent-ink); }
+.actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.actions button:disabled { opacity: .6; }
+.actions .btn { display: inline-flex; align-items: center; gap: 6px; width: auto; }
+
+.spinner {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2.5px solid color-mix(in srgb, var(--on-accent) 25%, transparent);
+  border-top-color: var(--on-accent);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shake { 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+
+@media (max-width: 560px) { .field.half { grid-column: span 2; } }

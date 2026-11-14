@@ -1,0 +1,35 @@
+@if (rx.isOpen(postId())) {
+  <section class="comments" aria-label="Commentaires">
+    @for (c of rx.comments(postId(), seed()); track c.id) {
+      <div class="c">
+        <span class="avatar">@if (c.mine && profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ c.initials }} }</span>
+        <div class="bubble">
+          <b>{{ c.name }}</b>
+          <p>{{ c.text }}</p>
+          <small>{{ c.when }}</small>
+        </div>
+        @if (c.mine) {
+          <div class="more">
+            <button type="button" class="rm" aria-label="Options du commentaire" title="Options" aria-haspopup="menu" [attr.aria-expanded]="rx.menu() === c.id" (click)="toggleMenu($event, c.id)"><app-icon name="dots" /></button>
+            @if (rx.menu() === c.id) {
+              <div class="pop" role="menu" (click)="$event.stopPropagation()">
+                <button type="button" role="menuitem" (click)="rx.remove(postId(), c.id)"><app-icon name="trash" />Supprimer</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    } @empty {
+      <p class="none">Aucun commentaire pour le moment. Soyez le premier à commenter.</p>
+    }
+
+    <div class="write">
+      <span class="avatar">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</span>
+      <span class="field">
+        <input #box type="text" placeholder="Écrire un commentaire…" aria-label="Écrire un commentaire" autocomplete="off"
+               [value]="draft()" (input)="draft.set($any($event.target).value)" (keydown.enter)="send()">
+        <button type="button" class="send" appRipple aria-label="Publier le commentaire" [disabled]="!draft().trim()" (click)="send()"><app-icon name="send" /></button>
+      </span>
+    </div>
+  </section>
+}

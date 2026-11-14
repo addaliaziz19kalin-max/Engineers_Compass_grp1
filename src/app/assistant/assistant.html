@@ -1,0 +1,40 @@
+@if (!svc.hidden()) {
+  @if (svc.isOpen()) {
+    <section class="panel" role="dialog" aria-label="Assistant d’aide">
+      <header>
+        <span class="logo"><app-icon name="message" /></span>
+        <b>Assistant d’aide</b>
+        <button type="button" class="close" aria-label="Fermer l’assistant" (click)="svc.close()"><app-icon name="x" /></button>
+      </header>
+
+      <div class="body" #body>
+        @for (m of messages(); track $index) {
+          <div class="bubble" [class.me]="m.from === 'me'">
+            {{ m.text }}
+            @if (m.link) { <a [routerLink]="m.link.href">{{ m.link.label }}</a> }
+          </div>
+        }
+        @if (typing()) { <div class="bubble typing" aria-label="L’assistant écrit"><i></i><i></i><i></i></div> }
+
+        <div class="quick">
+          @for (q of quick; track q; let i = $index) {
+            <button type="button" [style.--i]="i" (click)="ask(q)">{{ q }}</button>
+          }
+        </div>
+      </div>
+
+      <form class="composer" (submit)="send($event)">
+        <input type="text" name="msg" placeholder="Écrire un message…" autocomplete="off" aria-label="Message"
+               [value]="draft()" (input)="draft.set($any($event.target).value)">
+        <button type="submit" [disabled]="!draft().trim()">Envoyer</button>
+      </form>
+    </section>
+  }
+
+  <button type="button" class="fab" [class.open]="svc.isOpen()" [attr.aria-expanded]="svc.isOpen()"
+          aria-label="Assistant d’aide" (click)="svc.toggle()">
+    <app-icon class="i-chat" name="message" />
+    <app-icon class="i-x" name="x" />
+    @if (!seen()) { <i class="badge">1</i> }
+  </button>
+}

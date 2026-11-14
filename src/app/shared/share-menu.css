@@ -1,0 +1,55 @@
+:host { position: relative; display: grid; }
+
+/* bouton « Partager » de la barre d'actions (même style que J'aime / Commenter) */
+.trigger {
+  display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 4px; border: 0; border-radius: 10px; background: none; cursor: pointer;
+  font: inherit; font-size: 12.5px; font-weight: 700; color: var(--text-muted); transition: background-color .2s, color .2s, border-color .2s;
+}
+.trigger:hover, .trigger.on { background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--text); }
+.trigger app-icon { font-size: 17px; }
+/* icône seule (cartes et page d'un défi) : même hauteur que les boutons .btn-sm */
+.trigger.icon { width: 38px; height: 38px; padding: 0; border: 1px solid var(--border-strong); background: var(--card); color: var(--text); }
+.trigger.icon:hover, .trigger.icon.on { border-color: var(--text-muted); background: var(--card); }
+.trigger.icon app-icon { font-size: 17px; }
+
+.pop {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; translate: -50% 0; z-index: 30; width: 290px; max-width: calc(100vw - 24px); padding: 8px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 18px 44px rgba(14,23,34,.22);
+  animation: pop-in .22s cubic-bezier(.2,.8,.2,1) both; transform-origin: 50% 100%;
+}
+.pop.end { left: auto; right: 0; translate: none; transform-origin: 100% 100%; }
+:host-context([data-theme="dark"]) .pop { background: color-mix(in srgb, var(--bg) 82%, #1b2b3d); box-shadow: 0 18px 44px rgba(0,0,0,.55); }
+
+.pop > button {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px; border: 0; border-radius: 10px; background: none; cursor: pointer;
+  font: inherit; font-size: 12.5px; font-weight: 700; text-align: left; color: var(--text); transition: background-color .2s;
+}
+.pop > button:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.pop > button app-icon { font-size: 19px; flex: none; color: var(--text-muted); }
+.pop > button > span { display: grid; gap: 1px; }
+.pop b { font-size: 12.5px; }
+.pop small { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+
+.pop-h { display: flex; align-items: center; gap: 6px; margin: 2px 4px 6px; font-size: 12px; font-weight: 800; }
+.back { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; color: inherit; }
+.back:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.back app-icon { transform: rotate(180deg); font-size: 15px; }
+
+.list { max-height: 250px; overflow-y: auto; }
+.cap { margin: 8px 6px 2px; font-size: 10.5px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); }
+.avatar {
+  display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%;
+  font-size: 11px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #489e67, #277885);
+}
+.to { display: flex; align-items: center; gap: 10px; padding: 6px; }
+.to b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.send {
+  padding: 5px 12px; border: 1px solid var(--accent); border-radius: 999px; background: none; cursor: pointer;
+  font: inherit; font-size: 11.5px; font-weight: 700; color: var(--accent-ink);
+}
+.send.done { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: transparent; }
+
+@keyframes pop-in { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+
+/* état vide : « Envoyer à » sans contact ni groupe */
+.none { margin: 10px 12px 12px; font-size: 12.5px; line-height: 1.45; color: var(--text-muted); }

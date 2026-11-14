@@ -1,0 +1,5 @@
+banniere (page 27): linear-gradient(135deg, #10324d 0%, #1e6985 50%, #4da462 100%)
+vignette projet (page 21): linear-gradient(135deg, #1e6c88, #10324d)
+vignette bleue (page 20): linear-gradient(135deg, #1e6c88, #10324d)
+vignette verte (page 20): linear-gradient(135deg, #4da362, #217189)
+avatar (page 27): linear-gradient(135deg, #489e67, #277885)

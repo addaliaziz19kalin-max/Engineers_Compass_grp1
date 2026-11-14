@@ -1,0 +1,297 @@
+@if (mine.page(); as pg) {
+  <div class="wrap">
+    <div class="main">
+      <article class="panel head a" style="--i:0">
+        <div class="cover"></div>
+        <div class="body">
+          <div class="top">
+            <span class="logo"><app-icon name="file" /></span>
+            <div class="id">
+              <h1>
+                {{ pg.name }}
+                @if (pg.status === 'pending') {
+                  <span class="pill warn"><app-icon name="clock" />En attente de vérification</span>
+                } @else {
+                  <span class="pill ok"><app-icon name="shield" />Page vérifiée</span>
+                }
+              </h1>
+              <small>{{ line() }}{{ line() ? ' · ' : '' }}Vous êtes administrateur</small>
+            </div>
+            <div class="btns">
+              <button type="button" class="btn btn-line btn-sm" appRipple (click)="show('edit')"><app-icon name="edit" />Modifier la page</button>
+              <button type="button" class="btn btn-primary btn-sm" appRipple (click)="startMode('post')"><app-icon name="plus" />Publier</button>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" role="tablist">
+          @for (t of tabs(); track t.id) {
+            <button type="button" role="tab" [class.on]="view() === t.id" [attr.aria-selected]="view() === t.id" (click)="show(t.id)">{{ t.label }}</button>
+          }
+        </div>
+      </article>
+
+      @if (flash()) { <p class="panel flash" role="status"><app-icon name="check" />{{ flash() }}</p> }
+
+      @switch (view()) {
+        @case ('home') {
+          <section class="panel compose a" style="--i:1">
+            <div class="compose-top">
+              <span class="avatar">{{ pg.initials }}</span>
+              <div class="lines">
+                @if (mode() !== 'post') {
+                  <input class="line" type="text" [placeholder]="mode() === 'offer' ? 'Titre de l’offre…' : 'Titre du défi…'" aria-label="Titre"
+                         [value]="title()" (input)="title.set($any($event.target).value)">
+                }
+                <input #box class="line" type="text" [placeholder]="mode() === 'post' ? 'Publier au nom d’' + pg.name + '…' : 'Description…'" aria-label="Texte de la publication"
+                       [value]="text()" (input)="text.set($any($event.target).value)" (keydown.enter)="publish()">
+              </div>
+              @if (text().trim()) { <button type="button" class="btn btn-primary btn-sm" appRipple (click)="publish()">Publier</button> }
+            </div>
+            <div class="compose-actions">
+              <button type="button" [class.on]="mode() === 'offer'" (click)="startMode('offer')"><app-icon name="briefcase" />Offre</button>
+              <button type="button" [class.on]="mode() === 'challenge'" (click)="startMode('challenge')"><app-icon name="target" />Défi</button>
+              <label class="photo"><input type="file" accept="image/*" (change)="pickPhoto($any($event.target))"><app-icon name="image" />Photo</label>
+            </div>
+            @if (photo()) {
+              <p class="attach"><app-icon name="image" />{{ photo() }}<button type="button" class="rm" aria-label="Retirer la photo" (click)="photo.set('')"><app-icon name="x" /></button></p>
+            }
+            @if (composeError()) { <p class="err" role="alert">{{ composeError() }}</p> }
+          </section>
+
+          @for (po of mine.posts(); track po.id; let i = $index) {
+            <article class="panel post a" [style.--i]="i + 2">
+              <header>
+                <span class="ico"><app-icon name="file" /></span>
+                <div><b>{{ pg.name }}</b><small>{{ po.when }} · Public</small></div>
+                @if (po.kind !== 'post') { <span class="pill ok">{{ kindLabel(po.kind) }}</span> }
+              </header>
+              @if (po.title) { <h3>{{ po.title }}</h3> }
+              <p>{{ po.text }}</p>
+              @if (po.photo) { <small class="react"><app-icon name="image" /> {{ po.photo }}</small> }
+              <app-post-actions [postId]="'page-' + po.id" />
+            </article>
+          } @empty {
+            <section class="panel box a" style="--i:2"><p class="txt">Aucune publication pour le moment. Publiez au nom de votre page, ou ajoutez une offre ou un défi.</p></section>
+          }
+        }
+
+        @case ('about') {
+          <section class="panel box a" style="--i:1">
+            <h2>À propos</h2>
+            <p class="txt">{{ pg.about || 'Aucune présentation pour le moment. Ajoutez-en une depuis « Modifier la page ».' }}</p>
+            <p class="txt">{{ line() }}{{ line() ? ' · ' : '' }}{{ pg.size }} employés</p>
+          </section>
+        }
+
+        @case ('offers') {
+          <section class="panel box a" style="--i:1">
+            <h2>Offres publiées</h2>
+            @for (o of mine.offers(); track o.id) {
+              <button type="button" class="item row" (click)="show('applicants')">
+                <span class="ico"><app-icon name="briefcase" /></span>
+                <span><b>{{ o.title }}</b><small>{{ mine.applicantsOf(o.id).length }} candidature(s) · {{ o.when }}</small></span>
+                <app-icon class="go" name="chev-right" />
+              </button>
+            } @empty {
+              <p class="txt">Aucune offre publiée pour le moment.</p>
+              <button type="button" class="btn btn-line btn-sm own" appRipple (click)="startMode('offer')"><app-icon name="plus" />Publier une offre</button>
+            }
+          </section>
+        }
+
+        @case ('challenges') {
+          <section class="panel box a" style="--i:1">
+            <h2>Défis publiés</h2>
+            @for (c of mine.challenges(); track c.id) {
+              <button type="button" class="item row" (click)="show('solutions')">
+                <span class="ico"><app-icon name="target" /></span>
+                <span><b>{{ c.title }}</b><small>{{ mine.solutionsOf(c.id).length }} solution(s) · {{ c.when }}</small></span>
+                <app-icon class="go" name="chev-right" />
+              </button>
+            } @empty {
+              <p class="txt">Aucun défi publié pour le moment.</p>
+              <button type="button" class="btn btn-line btn-sm own" appRipple (click)="startMode('challenge')"><app-icon name="plus" />Publier un défi</button>
+            }
+          </section>
+        }
+
+        @case ('posts') {
+          @for (po of mine.publications(); track po.id; let i = $index) {
+            <article class="panel post a" [style.--i]="i + 1">
+              <header><span class="ico"><app-icon name="file" /></span><div><b>{{ pg.name }}</b><small>{{ po.when }} · Public</small></div></header>
+              <p>{{ po.text }}</p>
+              @if (po.photo) { <small class="react"><app-icon name="image" /> {{ po.photo }}</small> }
+              <app-post-actions [postId]="'page-' + po.id" />
+            </article>
+          } @empty {
+            <section class="panel box a" style="--i:1"><p class="txt">Aucune publication pour le moment.</p></section>
+          }
+        }
+
+        @case ('applicants') {
+          <section class="panel box a" style="--i:1">
+            <h2>Candidatures reçues</h2>
+            @for (o of mine.offers(); track o.id) {
+              <div class="grp"><b>{{ o.title }}</b><small>{{ mine.applicantsOf(o.id).length }} candidature(s)</small></div>
+              @for (a of mine.applicantsOf(o.id); track a.id) {
+                <div class="item">
+                  <span class="avatar sm">{{ a.initials }}</span>
+                  <span><b>{{ a.name }}</b><small>{{ a.role }} · {{ a.when }}</small></span>
+                  <span class="pill ok">{{ a.score }} %</span>
+                </div>
+              } @empty {
+                <p class="txt">Aucune candidature pour le moment. Les candidats vérifiés qui postulent apparaissent ici.</p>
+              }
+            } @empty {
+              <p class="txt">Publiez une offre pour recevoir des candidatures.</p>
+              <button type="button" class="btn btn-line btn-sm own" appRipple (click)="startMode('offer')"><app-icon name="plus" />Publier une offre</button>
+            }
+          </section>
+        }
+
+        @case ('dashboard') {
+          <h2 class="sec a" style="--i:1">Tableau de bord de la page</h2>
+          <div class="dstats">
+            @for (s of stats(); track s.label; let i = $index) {
+              <div class="panel stat a" [style.--i]="i + 1">
+                <span class="ico"><app-icon [name]="s.icon" /></span>
+                <div><b>{{ s.value }}</b><small>{{ s.label }}</small></div>
+              </div>
+            }
+          </div>
+          <section class="panel box a" style="--i:5">
+            <h2>Activité récente</h2>
+            @for (po of mine.posts().slice(0, 5); track po.id) {
+              <div class="item">
+                <span class="ico"><app-icon [name]="po.kind === 'offer' ? 'briefcase' : po.kind === 'challenge' ? 'target' : 'file'" /></span>
+                <span><b>{{ kindLabel(po.kind) }} · {{ po.title || po.text }}</b><small>{{ po.when }}</small></span>
+              </div>
+            } @empty { <p class="txt">Aucune activité pour le moment.</p> }
+          </section>
+        }
+
+        @case ('solutions') {
+          <section class="panel box a" style="--i:1">
+            <h2>Solutions proposées à vos défis</h2>
+            @for (c of mine.challenges(); track c.id) {
+              <div class="grp"><b>{{ c.title }}</b><small>{{ mine.solutionsOf(c.id).length }} solution(s)</small></div>
+              @for (s of mine.solutionsOf(c.id); track s.id) {
+                <div class="item">
+                  <span class="avatar sm">{{ s.initials }}</span>
+                  <span><b>{{ s.name }}</b><small>{{ s.role }} · {{ s.when }}</small><small class="sol">{{ s.text }}</small></span>
+                  <span class="pill ok">{{ s.score }} %</span>
+                </div>
+              } @empty {
+                <p class="txt">Personne n’a encore proposé de solution. Les membres qui résolvent ce défi apparaissent ici.</p>
+              }
+            } @empty {
+              <p class="txt">Publiez un défi pour recevoir des solutions.</p>
+              <button type="button" class="btn btn-line btn-sm own" appRipple (click)="startMode('challenge')"><app-icon name="plus" />Publier un défi</button>
+            }
+          </section>
+        }
+
+        @case ('edit') {
+          <form class="panel form a" style="--i:1" (submit)="$event.preventDefault(); saveEdit()">
+            <div class="fields">
+              <div class="field">
+                <label for="e-name">Nom de la page</label>
+                <span class="input"><app-icon name="building" /><input id="e-name" type="text" autocomplete="organization" [value]="name()" (input)="name.set($any($event.target).value)"></span>
+              </div>
+              <div class="field">
+                <label for="e-sector">Secteur d’activité</label>
+                <span class="input">
+                  <app-icon name="briefcase" />
+                  <select id="e-sector" [value]="sector()" (change)="sector.set($any($event.target).value)">
+                    @for (s of sectors; track s) { <option [value]="s" [selected]="sector() === s">{{ s }}</option> }
+                  </select>
+                  <app-icon class="chev" name="chev-down" />
+                </span>
+              </div>
+              <div class="field half">
+                <label for="e-city">Ville</label>
+                <span class="input"><app-icon name="pin" /><input id="e-city" type="text" autocomplete="off" [value]="city()" (input)="city.set($any($event.target).value)"></span>
+              </div>
+              <div class="field half">
+                <label for="e-size">Taille de l’entreprise</label>
+                <span class="input">
+                  <app-icon name="users" />
+                  <select id="e-size" [value]="size()" (change)="size.set($any($event.target).value)">
+                    @for (s of sizes; track s) { <option [value]="s" [selected]="size() === s">{{ s }} employés</option> }
+                  </select>
+                  <app-icon class="chev" name="chev-down" />
+                </span>
+              </div>
+            </div>
+            <label class="lbl" for="e-about">Présentation</label>
+            <textarea id="e-about" rows="3" [value]="about()" (input)="about.set($any($event.target).value)"></textarea>
+            @if (error()) { <p class="err" [class.shake]="shake()" role="alert">{{ error() }}</p> }
+            <div class="actions">
+              <button type="button" class="btn btn-line btn-sm" appRipple (click)="show('home')">Annuler</button>
+              <button type="submit" class="btn btn-primary btn-sm" appRipple>Enregistrer</button>
+            </div>
+          </form>
+        }
+
+        @case ('verify') {
+          <section class="panel form a" style="--i:1">
+            <p class="lbl">Justificatif d’entreprise</p>
+            <p class="hint">Attestation de travail, registre de commerce ou carte professionnelle.</p>
+            @if (!file()) {
+              <label class="drop" [class.drag]="dragging()"
+                     (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="drop($event)">
+                <input #upload type="file" accept="image/*,.pdf" (change)="pick(upload)">
+                <span class="up"><app-icon name="upload" /></span>
+                <b>Glissez votre document ici</b>
+                <small>ou <u>parcourez vos fichiers</u> · JPG, PNG ou PDF · 10 Mo max</small>
+              </label>
+            } @else {
+              <div class="picked">
+                <span class="ico"><app-icon name="file" /></span>
+                <span class="txt"><b>{{ file()!.name }}</b><small>{{ fileSize() }} · prêt à être envoyé</small></span>
+                <button type="button" class="rm" aria-label="Retirer le fichier" (click)="file.set(null)"><app-icon name="x" /></button>
+              </div>
+            }
+            <p class="note">Ce document sert uniquement à vérifier votre entreprise.</p>
+            @if (error()) { <p class="err" [class.shake]="shake()" role="alert">{{ error() }}</p> }
+            <div class="actions">
+              <button type="button" class="btn btn-line btn-sm" appRipple (click)="show('home')">Annuler</button>
+              <button type="button" class="btn btn-primary btn-sm" appRipple [disabled]="loading()" (click)="verifyNow()">
+                @if (loading()) { <span class="spinner" aria-hidden="true"></span> } @else { Envoyer et vérifier <app-icon name="check" /> }
+              </button>
+            </div>
+          </section>
+        }
+      }
+    </div>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:1">
+        <h2>Vérification de la page</h2>
+        @if (pg.status === 'pending') {
+          <div class="item"><span class="ico"><app-icon name="clock" /></span><span><b>Délai restant : {{ mine.daysLeft() }} {{ mine.daysLeft() > 1 ? 'jours' : 'jour' }}</b><small>Envoyez vos documents officiels</small></span></div>
+          <div class="item"><span class="ico"><app-icon name="alert" /></span><span><b>Avertissements : {{ pg.warnings }} / {{ maxWarnings }}</b><small>Un avertissement est envoyé après le délai</small></span></div>
+          <button type="button" class="btn btn-primary btn-sm full" appRipple (click)="show('verify')">Envoyer les documents</button>
+        } @else {
+          <div class="item"><span class="ico"><app-icon name="shield" /></span><span><b>Page vérifiée</b><small>Aucun avertissement</small></span></div>
+        }
+      </section>
+
+      <section class="panel box a" style="--i:2">
+        <h2>Outils de la page</h2>
+        <small class="priv"><app-icon name="lock" />Visibles uniquement par les administrateurs de la page.</small>
+        @for (t of tools(); track t.id) {
+          <button type="button" class="item tool" [class.on]="view() === t.id" (click)="show(t.id)">
+            <span class="ico"><app-icon [name]="t.icon" /></span>
+            <span><b>{{ t.label }}</b><small>{{ t.sub }}</small></span>
+            <app-icon class="go" name="chev-right" />
+          </button>
+        }
+      </section>
+
+      <section class="panel box tip a" style="--i:3">
+        <div class="item"><span class="ico"><app-icon name="file" /></span><span><small>Cette page apparaît dans votre barre d’icônes pour y accéder rapidement.</small></span></div>
+      </section>
+    </aside>
+  </div>
+}

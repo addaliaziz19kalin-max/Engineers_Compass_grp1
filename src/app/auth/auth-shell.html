@@ -1,0 +1,35 @@
+<div class="auth">
+  <header class="topbar">
+    <div class="topbar-in">
+      <a class="logo" routerLink="/" aria-label="Engineers Compass — accueil">
+        <img class="only-light" src="logo-fonce.png" alt="Engineers Compass">
+        <img class="only-dark" src="logo-clair.png" alt="Engineers Compass">
+      </a>
+
+      <div class="tools">
+        <label class="lang">
+          <app-icon class="i-globe" name="globe" />
+          <select aria-label="Langue">
+            <option value="fr" selected>Français</option>
+          </select>
+          <app-icon class="i-chev" name="chev-down" />
+        </label>
+
+        <ng-content select="[slot=actions]" />
+
+        <button class="theme-toggle" type="button" aria-label="Changer de thème"
+                [attr.aria-pressed]="theme.isDark()" [class.pop]="popping()"
+                (click)="toggleTheme()" (animationend)="popping.set(false)">
+          <app-icon class="i-moon" name="moon" />
+          <app-icon class="i-sun" name="sun" />
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <ng-content />
+  </main>
+
+  @if (withFooter()) { <app-site-footer /> }
+</div>

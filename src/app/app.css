@@ -1,0 +1,5 @@
+.page { position: relative; max-width: 1280px; margin: 0 auto; padding: 0 56px 90px; }
+
+@media (max-width: 680px) {
+  .page { padding: 0 20px 56px; }
+}

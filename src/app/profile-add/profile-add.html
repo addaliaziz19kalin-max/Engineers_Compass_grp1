@@ -1,0 +1,48 @@
+<div class="wrap">
+  <div class="main">
+    <h1 class="page-title a" style="--i:0">Ajouter à mon profil</h1>
+    <p class="page-sub a" style="--i:1">Expérience, formation ou certificat.</p>
+
+    <form class="panel form a" style="--i:2" (submit)="$event.preventDefault(); submit()">
+      <div class="chips" role="tablist" aria-label="Type d’élément">
+        @for (k of kinds; track k.id) {
+          <button type="button" role="tab" [class.on]="kind() === k.id" [attr.aria-selected]="kind() === k.id" (click)="kind.set(k.id)">{{ k.label }}</button>
+        }
+      </div>
+
+      <div class="fields">
+        @for (f of form().fields; track kind() + f.key) {
+          <div class="field" [class.half]="f.half">
+            <label [for]="'f-' + f.key">{{ f.label }}</label>
+            <span class="input">
+              <app-icon [name]="f.icon" />
+              <input [id]="'f-' + f.key" type="text" [placeholder]="f.placeholder" [value]="value(f.key)" (input)="set(f.key, $any($event.target).value)" autocomplete="off">
+            </span>
+          </div>
+        }
+      </div>
+
+      <label class="lbl" for="desc">Description</label>
+      <textarea id="desc" rows="3" [placeholder]="form().area" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
+
+      <p class="lbl">Preuve (facultatif)</p>
+      <label class="drop">
+        <input type="file" (change)="pick($any($event.target))">
+        <app-icon name="upload" />{{ proof()?.name ?? form().proof }}
+      </label>
+
+      @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+      @if (done()) { <p class="ok" role="status"><app-icon name="check" />Ajouté à votre profil.</p> }
+
+      <div class="actions">
+        <button type="button" class="btn btn-line btn-sm" appRipple (click)="cancel()">Annuler</button>
+        <button type="submit" class="btn btn-primary btn-sm" appRipple [disabled]="done()">Ajouter</button>
+      </div>
+    </form>
+  </div>
+
+  <aside class="panel after a" style="--i:3">
+    <div class="head"><span class="ico"><app-icon name="shield" /></span><h2>Pourquoi une preuve ?</h2></div>
+    <p>Une expérience ou un certificat accompagné d’une preuve est marqué « vérifié » et renforce votre score de confiance.</p>
+  </aside>
+</div>

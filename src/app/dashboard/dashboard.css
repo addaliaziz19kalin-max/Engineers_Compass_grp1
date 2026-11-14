@@ -1,0 +1,42 @@
+.wrap { max-width: 1000px; margin: 0 auto; padding: 28px 24px 72px; }
+.page-title { font-size: 22px; }
+.page-sub { font-size: 11px; margin-bottom: 14px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 266px; gap: 20px; align-items: start; }
+.main, .side { display: grid; gap: 16px; min-width: 0; }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.stat { display: flex; align-items: center; gap: 14px; padding: 18px 16px; }
+.stat b { display: block; font-size: 17px; font-weight: 800; }
+.stat small { font-size: 11px; }
+.ico { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; font-size: 17px; background: var(--badge-bg); color: var(--badge-fg); }
+:host-context([data-theme="dark"]) .ico { background: #16341f; color: #6fd08a; }
+
+.box { padding: 18px 16px; }
+.box h2 { margin: 0 0 14px; font-size: 14px; font-weight: 800; }
+
+.bars { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; height: 150px; padding: 0 6px; border-bottom: 1px solid var(--border); }
+.col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.col i {
+  display: block; width: 24px; min-height: 4px; border-radius: 4px 4px 0 0; background: color-mix(in srgb, var(--accent) 22%, transparent);
+  transform-origin: bottom; animation: grow .8s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i) * 70ms + .3s);
+  transition: background-color .2s;
+}
+.col i:hover { background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.col i.peak { background: var(--accent); }
+.col span { position: relative; top: 22px; height: 0; font-size: 10.5px; color: var(--text-muted); }
+.bars { margin-bottom: 26px; }
+@keyframes grow { from { transform: scaleY(0); } }
+
+.item { display: flex; align-items: center; gap: 12px; padding: 7px 0; color: inherit; border-radius: 10px; transition: transform .2s; }
+a.item:hover { transform: translateX(3px); }
+.item b { display: block; font-size: 12px; font-weight: 700; }
+.item small { font-size: 10.5px; }
+
+.score { display: flex; align-items: baseline; gap: 8px; margin: 0 0 10px; }
+.score b { font-size: 30px; font-weight: 800; color: var(--accent-ink); }
+.score span { font-size: 12px; color: var(--text-muted); }
+.note { display: block; margin-top: 12px; font-size: 11px; line-height: 1.5; }
+
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, 1fr); } }
+
+.none { margin: 0; font-size: 12.5px; color: var(--text-muted); }

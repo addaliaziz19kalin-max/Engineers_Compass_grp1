@@ -1,0 +1,113 @@
+<div class="wrap">
+  <section class="left">
+    <div class="panel head a" style="--i:0">
+      <button type="button" class="cover" aria-label="Changer la photo de couverture" title="Changer la photo de couverture"
+              [style.background-image]="profile.cover() ? 'url(' + profile.cover() + ')' : null" (click)="coverInput.click()">
+        <span class="edit"><app-icon name="image" />Modifier la couverture</span>
+      </button>
+      <input #coverInput class="pick" type="file" accept="image/*" tabindex="-1" aria-hidden="true" (change)="onPick('cover', $event)">
+      <div class="body">
+        <div class="id">
+          <button type="button" class="ava" aria-label="Changer la photo de profil" title="Changer la photo de profil" (click)="avatarInput.click()">
+            @if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }
+            <span class="cam"><app-icon name="image" /></span>
+          </button>
+          <input #avatarInput class="pick" type="file" accept="image/*" tabindex="-1" aria-hidden="true" (change)="onPick('avatar', $event)">
+          <span class="pill ok">{{ account.badge() }}</span>
+        </div>
+        @if (imageError()) { <p class="img-err" role="alert">{{ imageError() }}</p> }
+        <h1>{{ profile.info().name }}</h1>
+        <small>{{ profile.info().role }}</small>
+        @if (profile.info().about) { <p class="about">{{ profile.info().about }}</p> }
+        @if (profile.latest(); as last) {
+          <p class="bio"><app-icon name="briefcase" /><span><em>Expérience récente</em>{{ last.title }}</span></p>
+        }
+        <div class="btns">
+          <a class="btn btn-primary btn-sm" routerLink="/profil/modifier" appRipple>Modifier le profil</a>
+          <a class="btn btn-line btn-sm" routerLink="/profil/ajouter" appRipple><app-icon name="plus" />Partager une expérience</a>
+          @if (account.isEmployer() && !mine.page()) {
+            <a class="btn btn-line btn-sm" routerLink="/creer-page" appRipple><app-icon name="plus" />Créer une page</a>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="panel exp a" style="--i:1">
+      <div class="exp-h">
+        <h2>Rôles et expériences</h2>
+        <a class="add" routerLink="/profil/ajouter" title="Ajouter une expérience, une formation ou un certificat" aria-label="Ajouter à mon profil"><app-icon name="plus" /></a>
+      </div>
+      @for (e of profile.entries(); track e.id; let i = $index) {
+        <div class="item" [style.--i]="i">
+          <span class="ico"><i></i></span>
+          <div><b>{{ e.title }}</b><small>{{ e.sub }}</small></div>
+        </div>
+      } @empty {
+        <p class="none">Aucune expérience pour le moment. Ajoutez un rôle, une formation ou un certificat avec le bouton +.</p>
+      }
+    </div>
+
+    <!-- mes publications : publiques, comme dans le fil -->
+    @if (posts.items().length) {
+      <div class="panel exp a" style="--i:2">
+        <div class="exp-h">
+          <h2>Publications</h2>
+          <small class="priv"><app-icon name="globe" />Visibles par tous</small>
+        </div>
+        @for (p of posts.items(); track p.id) {
+          <a class="item" [routerLink]="p.link ?? '/fil'">
+            <span class="ico"><i></i></span>
+            <div><b>{{ p.title || p.text }}</b><small>{{ p.label }} · {{ ago(p.at) }}</small></div>
+            <app-icon class="go" name="chev-right" />
+          </a>
+        }
+      </div>
+    }
+
+    <!-- employeur : ses pages, visibles uniquement depuis son propre profil (jamais par un visiteur) -->
+    @if (account.isEmployer()) {
+      @if (mine.page(); as pg) {
+        <div class="panel exp a" style="--i:2">
+          <div class="exp-h">
+            <h2>Mes pages</h2>
+            <small class="priv"><app-icon name="lock" />Visible uniquement par vous</small>
+          </div>
+          <a class="item" routerLink="/ma-page">
+            <span class="ico"><app-icon name="file" /></span>
+            <div><b>{{ pg.name }}</b><small>{{ pg.status === 'pending' ? 'En attente de vérification' : 'Page vérifiée' }} · Administrateur</small></div>
+            <app-icon class="go" name="chev-right" />
+          </a>
+        </div>
+      }
+    }
+  </section>
+
+  <aside class="right">
+    <section class="panel score a" style="--i:1">
+      <div class="ring" role="img" [attr.aria-label]="'Score de confiance ' + score + ' sur 100'">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle class="bg" cx="24" cy="24" r="20" pathLength="100" />
+          <circle class="val" cx="24" cy="24" r="20" pathLength="100" [attr.stroke-dasharray]="score + ' 100'" />
+        </svg>
+        <b>{{ score }}</b>
+      </div>
+      <div><h3>Score de confiance</h3><small>Rôle vérifié, compétences testées</small></div>
+    </section>
+
+    <section class="panel card a" style="--i:2">
+      <h3>Mon réseau</h3>
+      <div class="kv"><small>Invitations reçues et envoyées</small><b>{{ invitations() }}</b></div>
+      <div class="kv"><small>Mes contacts</small><b>{{ contacts() }}</b></div>
+    </section>
+
+    <section class="panel card a" style="--i:3">
+      <h3>Groupes par spécialité</h3>
+      <div class="tags">@for (g of groups; track g) { <span class="pill">{{ g }}</span> } @empty { <p class="none">Aucun groupe pour le moment.</p> }</div>
+    </section>
+
+    <section class="panel card a" style="--i:4">
+      <h3>Compétences testées</h3>
+      <div class="tags">@for (s of skills; track s.name) { <span class="pill ok">{{ s.name }} · {{ s.value }} %</span> } @empty { <p class="none">Aucune compétence testée pour le moment.</p> }</div>
+    </section>
+  </aside>
+</div>

@@ -1,0 +1,94 @@
+/* mise en page identique à la page entreprise vue par un visiteur (company), plus la zone d'administration */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 28px 24px 72px; display: grid; grid-template-columns: minmax(0, 1fr) 284px; gap: 20px; align-items: start; }
+.main, .side { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.head { overflow: hidden; padding: 0; }
+.cover { height: 114px; background: linear-gradient(100deg, #1f6a86 0%, #2f8c7a 50%, #4aa86a 100%); }
+.body { padding: 0 20px 6px; }
+.top { display: flex; align-items: flex-end; gap: 14px; margin-top: -32px; flex-wrap: wrap; }
+.logo { display: grid; place-items: center; flex: none; width: 68px; height: 68px; border-radius: 16px; font-size: 28px; background: var(--card); color: var(--accent-ink); box-shadow: 0 2px 10px rgba(0,0,0,.14); }
+.id { flex: 1; min-width: 200px; display: grid; gap: 3px; padding-top: 34px; }
+h1 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0; font-size: 18px; font-weight: 800; }
+.id small { font-size: 11px; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; }
+.btns { display: flex; gap: 10px; }
+.btns .btn { width: auto; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 16px; }
+.tabs { display: flex; gap: 6px; padding: 0 14px; margin-top: 8px; border-top: 1px solid transparent; overflow-x: auto; }
+.tabs button { position: relative; padding: 14px 12px; border: 0; background: none; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: color .2s; }
+.tabs button:hover { color: var(--text); }
+.tabs button.on { color: var(--accent-ink); font-weight: 800; }
+.tabs button.on::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--accent); animation: rise .3s ease both; }
+
+.post { padding: 16px; display: grid; gap: 10px; }
+.post header { display: flex; align-items: center; gap: 12px; }
+.post header div { display: grid; gap: 1px; flex: 1; min-width: 0; }
+.post b { font-size: 12.5px; }
+.post small { font-size: 10.5px; }
+.post h3 { margin: 0; font-size: 14px; font-weight: 800; }
+.post p { margin: 0; font-size: 13px; line-height: 1.6; }
+.react { display: flex; align-items: center; gap: 6px; padding-top: 4px; }
+.ico { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; font-size: 17px; background: var(--badge-bg); color: var(--badge-fg); }
+:host-context([data-theme="dark"]) .ico { background: #16341f; color: #6fd08a; }
+
+.box { display: grid; gap: 10px; padding: 18px; }
+.box h2 { margin: 0; font-size: 14px; font-weight: 800; }
+.txt { margin: 0; font-size: 12.5px; line-height: 1.7; color: var(--text-muted); }
+.item { display: flex; align-items: center; gap: 12px; padding: 6px 0; color: inherit; }
+.item > span:nth-child(2) { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.item b { font-size: 12px; }
+.item small { font-size: 10.5px; }
+.item .go { font-size: 14px; color: var(--text-muted); }
+.full { width: 100%; margin-top: 4px; }
+
+/* boutons-lignes (offres, défis, outils) */
+.row, .tool { width: 100%; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; border-radius: 10px; transition: transform .2s, background-color .2s; }
+.row:hover { transform: translateX(3px); }
+.row:hover b { color: var(--accent-ink); }
+.tool { padding: 8px 10px; margin: 0 -10px; width: calc(100% + 20px); }
+.tool:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.tool.on { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.tool.on b { color: var(--accent-ink); }
+.priv { display: flex; align-items: flex-start; gap: 6px; font-size: 10.5px; line-height: 1.5; }
+.priv app-icon { margin-top: 1px; font-size: 12px; flex: none; }
+.tip .item { padding: 0; }
+.own { justify-self: start; display: inline-flex; align-items: center; gap: 6px; width: auto; }
+
+/* groupes (une offre ou un défi et ses candidatures / solutions) */
+.grp { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--border); }
+.grp:first-of-type { margin-top: 0; padding-top: 0; border-top: 0; }
+.grp b { font-size: 12.5px; }
+.sol { display: block; margin-top: 4px; line-height: 1.5; }
+
+/* tableau de bord de la page */
+.sec { margin: 0; font-size: 15px; font-weight: 800; }
+.dstats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.stat { display: flex; align-items: center; gap: 14px; padding: 18px 16px; }
+.stat b { display: block; font-size: 17px; font-weight: 800; }
+.stat small { font-size: 11px; }
+
+/* confirmation */
+.flash { display: flex; align-items: center; gap: 8px; margin: 0; padding: 12px 16px; font-size: 12px; font-weight: 700; color: var(--accent-ink); animation: rise .35s ease both; }
+
+/* zone « Publier au nom de la page » */
+.compose { padding: 16px; display: grid; gap: 12px; }
+.compose-top { display: flex; align-items: center; gap: 12px; }
+.lines { flex: 1; min-width: 0; display: grid; gap: 8px; }
+.line {
+  width: 100%; height: 38px; padding: 0 16px; border-radius: 999px; border: 0; outline: 0; font: inherit; font-size: 12.5px; color: var(--text);
+  background: color-mix(in srgb, var(--text) 6%, transparent); transition: box-shadow .25s;
+}
+.line::placeholder { color: var(--text-muted); }
+.line:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+.compose-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.compose-actions button, .photo {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 0; border-radius: 8px; background: none; cursor: pointer;
+  font: inherit; font-size: 11px; font-weight: 700; color: var(--text-muted); transition: background-color .2s, color .2s;
+}
+.compose-actions button:hover, .photo:hover { background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--text); }
+.compose-actions button.on { color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+.compose-actions app-icon { font-size: 15px; color: var(--accent-ink); }
+.photo { position: relative; }
+.photo input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+.attach { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 11px; color: var(--text-muted); }
+.attach .rm { width: 22px; height: 22px; font-size: 12px; }
+
+@media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }

@@ -1,0 +1,110 @@
+<div class="wrap">
+  <div class="main">
+    <h1 class="page-title a" style="--i:0">Créer une page</h1>
+    <p class="page-sub a" style="--i:1">Étape {{ step() }} sur 2 · {{ step() === 1 ? 'Informations de la page' : 'Vérification de l’entreprise' }}</p>
+    <div class="steps a" style="--i:1" aria-hidden="true"><i class="on"></i><i [class.on]="step() === 2"></i></div>
+
+    @if (step() === 1) {
+      <form class="panel form a" style="--i:2" (submit)="$event.preventDefault(); next()">
+        <div class="fields">
+          <div class="field">
+            <label for="p-name">Nom de la page</label>
+            <span class="input">
+              <app-icon name="building" />
+              <input id="p-name" type="text" placeholder="Entreprise A" autocomplete="organization" [value]="name()" (input)="name.set($any($event.target).value)">
+            </span>
+          </div>
+          <div class="field">
+            <label for="p-sector">Secteur d’activité</label>
+            <span class="input">
+              <app-icon name="briefcase" />
+              <select id="p-sector" [value]="sector()" (change)="sector.set($any($event.target).value)">
+                @for (s of sectors; track s) { <option [value]="s" [selected]="sector() === s">{{ s }}</option> }
+              </select>
+              <app-icon class="chev" name="chev-down" />
+            </span>
+          </div>
+          <div class="field half">
+            <label for="p-city">Ville</label>
+            <span class="input">
+              <app-icon name="pin" />
+              <input id="p-city" type="text" placeholder="Tunis" autocomplete="off" [value]="city()" (input)="city.set($any($event.target).value)">
+            </span>
+          </div>
+          <div class="field half">
+            <label for="p-size">Taille de l’entreprise</label>
+            <span class="input">
+              <app-icon name="users" />
+              <select id="p-size" [value]="size()" (change)="size.set($any($event.target).value)">
+                @for (s of sizes; track s) { <option [value]="s" [selected]="size() === s">{{ s }} employés</option> }
+              </select>
+              <app-icon class="chev" name="chev-down" />
+            </span>
+          </div>
+        </div>
+
+        <label class="lbl" for="p-about">Présentation</label>
+        <textarea id="p-about" rows="3" placeholder="Présentez votre entreprise, ses métiers et les stages ou PFE que vous proposez…" [value]="about()" (input)="about.set($any($event.target).value)"></textarea>
+
+        @if (error()) { <p class="err" [class.shake]="shake()" role="alert">{{ error() }}</p> }
+
+        <div class="actions">
+          <button type="button" class="btn btn-line btn-sm" appRipple (click)="cancel()">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-sm" appRipple>Continuer <app-icon name="chev-right" /></button>
+        </div>
+      </form>
+    } @else {
+      <section class="panel form a" style="--i:2">
+        <p class="lbl">Justificatif d’entreprise</p>
+        <p class="hint">Attestation de travail, registre de commerce ou carte professionnelle.</p>
+
+        @if (!file()) {
+          <label class="drop" [class.drag]="dragging()"
+                 (dragover)="$event.preventDefault(); dragging.set(true)" (dragleave)="dragging.set(false)" (drop)="drop($event)">
+            <input #upload type="file" accept="image/*,.pdf" (change)="pick(upload)">
+            <span class="up"><app-icon name="upload" /></span>
+            <b>Glissez votre document ici</b>
+            <small>ou <u>parcourez vos fichiers</u> · JPG, PNG ou PDF · 10 Mo max</small>
+          </label>
+        } @else {
+          <div class="picked">
+            <span class="ico"><app-icon name="file" /></span>
+            <span class="txt"><b>{{ file()!.name }}</b><small>{{ fileSize() }} · prêt à être envoyé</small></span>
+            <button type="button" class="rm" aria-label="Retirer le fichier" (click)="file.set(null)"><app-icon name="x" /></button>
+          </div>
+        }
+
+        <p class="note">Ce document sert uniquement à vérifier votre entreprise. Sans vérification, vous avez 14 jours pour l’envoyer depuis votre page.</p>
+
+        @if (error()) { <p class="err" [class.shake]="shake()" role="alert">{{ error() }}</p> }
+
+        <div class="actions">
+          <button type="button" class="btn btn-line btn-sm" appRipple (click)="go(1)"><app-icon name="arrow-left" /> Retour</button>
+          <button type="button" class="btn btn-line btn-sm" appRipple (click)="createLater()">Créer la page, vérifier plus tard</button>
+          <button type="button" class="btn btn-primary btn-sm" appRipple [disabled]="loading()" (click)="verifyAndCreate()">
+            @if (loading()) { <span class="spinner" aria-hidden="true"></span> } @else { Vérifier et créer <app-icon name="check" /> }
+          </button>
+        </div>
+      </section>
+    }
+  </div>
+
+  <aside class="side">
+    <section class="panel preview a" style="--i:3" aria-label="Aperçu de la page">
+      <div class="cover"></div>
+      <div class="pbody">
+        <span class="logo">
+          @if (initials()) { {{ initials() }} } @else { <app-icon name="file" /> }
+        </span>
+        <b>{{ name().trim() || 'Nom de la page' }}</b>
+        <small>{{ line() }}</small>
+        <span class="pill warn">En attente de vérification</span>
+      </div>
+    </section>
+
+    <section class="panel after a" style="--i:4">
+      <div class="head"><span class="ico"><app-icon name="shield" /></span><h2>Pourquoi vérifier ?</h2></div>
+      <p>Une page vérifiée peut publier des offres et des défis. Elle reste gérée uniquement depuis votre compte : les visiteurs ne voient jamais les outils d’administration.</p>
+    </section>
+  </aside>
+</div>

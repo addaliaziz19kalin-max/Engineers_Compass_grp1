@@ -1,0 +1,50 @@
+.wrap { max-width: 1280px; margin: 0 auto; padding: 32px 24px 72px; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
+.main { min-width: 0; }
+
+.list { display: grid; gap: 14px; }
+.offer {
+  display: flex; align-items: center; gap: 16px; padding: 16px 18px;
+  animation: rise .55s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i) * 70ms);
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+}
+.offer:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(18,35,63,.12); }
+.logo-box {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px;
+  font-size: 12px; font-weight: 800; background: var(--badge-bg); color: var(--badge-fg);
+}
+.info { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.info h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: 15px; font-weight: 800; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.sent { animation: pop .4s cubic-bezier(.34,1.56,.64,1) both; }
+.side { display: grid; justify-items: end; gap: 8px; flex: none; }
+.side .btn { min-width: 100px; }
+.btn:disabled { opacity: .55; cursor: default; transform: none; box-shadow: none; }
+.empty { padding: 40px 0; text-align: center; color: var(--text-muted); font-size: 14px; }
+
+/* suivi des candidatures */
+.detail { position: sticky; top: 24px; }
+.box { display: grid; gap: 16px; padding: 20px; }
+.box h2 { margin: 0; font-size: 15px; font-weight: 800; }
+.app { display: grid; gap: 6px; animation: rise .4s cubic-bezier(.2,.8,.2,1) both; }
+.app b { font-size: 12.5px; }
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.seg i { height: 5px; border-radius: 3px; background: var(--track); transition: background-color .3s; }
+.seg i.on { background: var(--accent); }
+.seg-lbl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.seg-lbl small { font-size: 10px; }
+
+@media (max-width: 1000px) {
+  .wrap { grid-template-columns: 1fr; padding: 24px 16px 56px; }
+  .detail { position: static; }
+}
+@media (max-width: 560px) {
+  .offer { flex-wrap: wrap; }
+  .side { width: 100%; justify-items: start; grid-auto-flow: column; justify-content: space-between; align-items: center; }
+}
+
+.offer { cursor: pointer; }
+.info h2 a { color: inherit; }
+.offer:hover .info h2 a { color: var(--accent-ink); }
+
+.lnk { color: inherit; }
+.lnk:hover { color: var(--accent-ink); text-decoration: underline; }

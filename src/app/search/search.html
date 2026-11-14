@@ -1,0 +1,70 @@
+<div class="wrap">
+  <aside class="panel filters a" style="--i:0" aria-label="Filtres">
+    <div class="f-head">
+      <h2>Filtres</h2>
+      @if (hasFilters()) { <button type="button" class="reset" (click)="clearFilters()">Réinitialiser</button> }
+    </div>
+
+    @for (g of filters(); track g.id) {
+      <fieldset>
+        <legend>{{ g.label }}</legend>
+        @for (o of g.options; track o) {
+          <label class="chk"><input type="checkbox" [checked]="isOn(g.id, o)" (change)="toggle(g.id, o)"><i></i>{{ o }}</label>
+        }
+      </fieldset>
+    } @empty {
+      <p class="no-filter">Aucun filtre pour cette catégorie.</p>
+    }
+  </aside>
+
+  <main class="main">
+    <div class="head">
+      <button type="button" class="back a" style="--i:0" appRipple aria-label="Retour à la page précédente" title="Retour" (click)="back()">
+        <app-icon name="arrow-left" />
+      </button>
+      <div class="titles">
+        @if (q()) {
+          <h1 class="page-title a" style="--i:0">Résultats pour « {{ q() }} »</h1>
+          <p class="page-sub a" style="--i:1">{{ total() }} résultat{{ total() > 1 ? 's' : '' }}</p>
+        } @else {
+          <h1 class="page-title a" style="--i:0">Rechercher</h1>
+          <p class="page-sub a" style="--i:1">Personnes, offres, défis, pages et publications. Tapez dans la barre ci-dessus.</p>
+        }
+      </div>
+    </div>
+
+    <section class="panel box a" style="--i:2">
+      <div class="chips" role="tablist" aria-label="Catégories">
+        @for (t of tabs; track t.id) {
+          <button type="button" role="tab" [class.on]="cat() === t.id" [attr.aria-selected]="cat() === t.id" (click)="chosen.set(t.id)">{{ t.label }} ({{ counts()[t.id] }})</button>
+        }
+      </div>
+
+      <div class="rows">
+        @for (r of results(); track r.key; let i = $index) {
+          <article class="row" [style.--i]="i">
+            <span class="thumb" [class.round]="r.cat === 'person'">{{ r.badge }}</span>
+            <div class="txt">
+              @if (r.cat === 'person' || r.cat === 'page') { <b><a class="lnk" [routerLink]="[r.cat === 'person' ? '/membre' : '/page', slug(r.title)]">{{ r.title }}</a></b> } @else { <b>{{ r.title }}</b> }
+              <small>{{ r.sub }}</small>
+            </div>
+
+            @if (r.cat === 'person') {
+              <span class="score" title="Score de confiance"><app-icon name="shield" />{{ r.score }} %</span>
+              @switch (relation(r)) {
+                @case ('contact') { <button type="button" class="connect" appRipple (click)="message(r)"><app-icon name="send" />Message</button> }
+                @case ('invited') { <button type="button" class="connect" appRipple (click)="accept(r)"><app-icon name="user-plus" />Accepter</button> }
+                @case ('sent') { <button type="button" class="connect sent" disabled><app-icon name="check" />Demande envoyée</button> }
+                @default { <button type="button" class="connect" appRipple (click)="connect(r)"><app-icon name="user-plus" />Se connecter</button> }
+              }
+            } @else if (r.link) {
+              <a class="connect" [routerLink]="r.link" [queryParams]="r.query" appRipple>{{ r.action }}</a>
+            }
+          </article>
+        } @empty {
+          <p class="empty">Aucun résultat dans cette catégorie{{ q() ? ' pour « ' + q() + ' »' : '' }}.</p>
+        }
+      </div>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,47 @@
+/* Styles communs aux pages du compte (fil, défis, offres, recherche) */
+:host { display: block; }
+/* ---------- surfaces ---------- */
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--card-shadow); }
+:host-context([data-theme="dark"]) .panel { background: color-mix(in srgb, var(--bg) 82%, #1b2b3d); }
+.a { animation: rise .6s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i, 0) * 80ms); }
+small { font-size: 12px; color: var(--text-muted); }
+
+.avatar {
+  display: inline-grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%;
+  font-size: 12px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #489e67, #277885);
+}
+.avatar.lg { width: 48px; height: 48px; font-size: 15px; }
+.avatar.sm { width: 32px; height: 32px; font-size: 11px; }
+
+
+/* titres de page */
+.page-title { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.02em; }
+.page-sub { margin: 6px 0 16px; font-size: 13px; color: var(--text-muted); }
+
+/* pastilles de filtre */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.chips button {
+  padding: 8px 16px; border: 1px solid transparent; border-radius: 999px; cursor: pointer;
+  font: inherit; font-size: 12.5px; font-weight: 700; color: var(--text-muted);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  transition: background-color .2s, color .2s, transform .2s, border-color .2s;
+}
+.chips button:hover { color: var(--text); transform: translateY(-1px); }
+.chips button.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+/* pastille d'info */
+.pill { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: color-mix(in srgb, var(--text) 7%, transparent); color: var(--text-muted); }
+.pill.ok { background: var(--badge-bg); color: var(--badge-fg); }
+.pill.warn { background: var(--tag-bg); color: var(--tag-fg); }
+
+.progress { height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.progress i { display: block; height: 100%; border-radius: 3px; background: var(--accent); animation: fillbar 1s cubic-bezier(.2,.8,.2,1) .3s backwards; }
+
+/* boutons de carte */
+.btn-sm { height: 38px; padding: 0 16px; font-size: 12.5px; border-radius: 10px; }
+.btn-dark { background: #12233f; color: #fff; }
+.btn-dark:hover { background: #1b3560; box-shadow: 0 8px 20px rgba(18,35,63,.25); }
+:host-context([data-theme="dark"]) .btn-dark { background: #0a111a; color: #f1f5f9; border-color: var(--border); }
+:host-context([data-theme="dark"]) .btn-dark:hover { background: #111d2b; }
+.btn-line { background: var(--card); color: var(--text); border-color: var(--border-strong); }
+.btn-line:hover { border-color: var(--text-muted); }

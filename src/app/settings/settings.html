@@ -1,0 +1,78 @@
+<div class="wrap">
+  <aside class="panel nav a" style="--i:0" aria-label="Paramètres">
+    <h2>Paramètres</h2>
+    @for (s of sections(); track s.id) {
+      <a [routerLink]="['/parametres', s.id]" [class.on]="section().id === s.id"><app-icon [name]="s.icon" />{{ s.label }}</a>
+    }
+  </aside>
+
+  <main class="main">
+    <h1 class="page-title a" style="--i:0">{{ section().title }}</h1>
+    <p class="page-sub a" style="--i:1">{{ section().sub }}</p>
+
+    @for (g of section().groups; track g.title; let gi = $index) {
+      <section class="panel group a" [style.--i]="gi + 2">
+        <h3>{{ g.title }}</h3>
+        @for (r of g.rows; track r.id) {
+          <div class="row">
+            <div class="lbl"><b>{{ r.title }}</b><small>{{ r.sub }}</small></div>
+
+            @switch (r.type) {
+              @case ('select') {
+                <span class="select">
+                  <select [attr.aria-label]="r.title" (change)="setValue(r.id, $any($event.target).value)">
+                    @for (o of $any(r).options; track o) { <option [selected]="o === str(r)">{{ o }}</option> }
+                  </select>
+                  <app-icon name="chev-down" />
+                </span>
+              }
+              @case ('toggle') {
+                <button type="button" class="sw" role="switch" [attr.aria-checked]="val(r)" [attr.aria-label]="r.title" [class.on]="val(r)" (click)="setValue(r.id, !val(r))"><i></i></button>
+              }
+              @case ('badge') {
+                <span class="pill ok"><app-icon name="lock" />{{ $any(r).text }}</span>
+              }
+              @case ('button') {
+                <button type="button" class="mini" [class.danger]="$any(r).danger" (click)="press(r)">{{ $any(r).label }}</button>
+              }
+            }
+          </div>
+
+          @if (open() === r.id) {
+            <form class="editor" novalidate (submit)="$event.preventDefault(); submitEditor(r.id, $any($event.target))">
+              @switch (r.id) {
+                @case ('email') {
+                  <label>Nouvelle adresse e-mail<input name="email" type="email" autocomplete="email" [value]="$any(r).sub === 'Non renseignée' ? '' : $any(r).sub"></label>
+                  <p class="hint">Un lien de confirmation sera envoyé à cette adresse.</p>
+                }
+                @case ('pwd') {
+                  <label>Mot de passe actuel<input name="current" type="password" autocomplete="current-password"></label>
+                  <label>Nouveau mot de passe<input name="next" type="password" autocomplete="new-password"></label>
+                  <label>Confirmer le nouveau mot de passe<input name="again" type="password" autocomplete="new-password"></label>
+                  <p class="hint">6 caractères minimum.</p>
+                }
+                @case ('delete') {
+                  <p class="warn"><app-icon name="alert" />Votre profil, vos publications, vos messages et vos candidatures seront supprimés. Cette action est définitive.</p>
+                  <label>Pour confirmer, tapez <b>SUPPRIMER</b><input name="confirm" type="text" autocomplete="off"></label>
+                }
+              }
+              @if (formError()) { <p class="err" role="alert">{{ formError() }}</p> }
+              <div class="ed-actions">
+                <button type="button" class="btn btn-line btn-sm" appRipple (click)="closeEditor()">Annuler</button>
+                <button type="submit" class="btn btn-sm" [class.btn-primary]="r.id !== 'delete'" [class.btn-danger]="r.id === 'delete'" appRipple>{{ r.id === 'delete' ? 'Supprimer définitivement' : 'Enregistrer' }}</button>
+              </div>
+            </form>
+          }
+        }
+      </section>
+    }
+
+    @if (note()) { <p class="note" role="status">{{ note() }}</p> }
+
+    <div class="actions">
+      @if (saved()) { <span class="ok"><app-icon name="check" />Modifications enregistrées</span> }
+      <button type="button" class="btn btn-line btn-sm" appRipple (click)="cancel()">Annuler</button>
+      <button type="button" class="btn btn-primary btn-sm" appRipple (click)="save()">Enregistrer</button>
+    </div>
+  </main>
+</div>

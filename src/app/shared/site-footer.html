@@ -1,0 +1,30 @@
+<footer class="foot">
+  <div class="foot-in">
+    <a class="logo" routerLink="/fil" aria-label="Engineers Compass — accueil">
+      <img class="only-light" src="logo-fonce.png" alt="Engineers Compass">
+      <img class="only-dark" src="logo-clair.png" alt="Engineers Compass">
+    </a>
+
+    <nav class="cols" aria-label="Pied de page">
+      <div>
+        <h4>Plateforme</h4>
+        <a routerLink="/defis">Défis</a>
+        <a routerLink="/offres">Offres</a>
+        <a routerLink="/fil">Communauté</a>
+      </div>
+      <div>
+        <h4>Ressources</h4>
+        <a routerLink="/aide">Centre d’aide</a>
+        <a href="#" (click)="$event.preventDefault()">Blog</a>
+        <a routerLink="/contact">Contact</a>
+      </div>
+      <div>
+        <h4>Légal</h4>
+        <a routerLink="/confidentialite">Confidentialité</a>
+        <a routerLink="/conditions">Conditions</a>
+      </div>
+    </nav>
+
+    <p class="copy">© {{ year }} Engineers Compass<br>Réseau d’ingénieurs aux profils vérifiés<br>Tous droits réservés</p>
+  </div>
+</footer>

@@ -1,0 +1,96 @@
+/* ---------- indicateur d'étapes ---------- */
+.steps { list-style: none; margin: 0 0 22px; padding: 0; display: flex; justify-content: space-between; gap: 8px; }
+.steps li { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--text-muted); transition: color .25s; }
+.steps .dot {
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  transition: background-color .3s, color .3s, transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.steps .dot app-icon { font-size: 13px; stroke-width: 3; }
+.steps li.on { color: var(--text); font-weight: 700; }
+.steps li.on .dot, .steps li.done .dot { background: var(--accent); color: var(--on-accent); }
+.steps li.on .dot { transform: scale(1.12); }
+
+/* ---------- panneaux ---------- */
+.panel { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
+.panel[hidden] { display: none; }
+.q { margin: 0 0 6px; font-size: 15px; font-weight: 800; }
+.hint { margin: 0 0 16px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
+.terms { margin: 2px 0 18px; align-items: flex-start; line-height: 1.5; }
+.terms .box { margin-top: 1px; }
+
+/* ---------- choix du rôle ---------- */
+.roles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 18px; }
+.role {
+  position: relative; display: flex; align-items: center; gap: 12px; padding: 14px;
+  background: var(--bg); border: 1.5px solid transparent; border-radius: 14px; cursor: pointer;
+  animation: rise .5s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i) * 70ms);
+  transition: border-color .2s, transform .2s, box-shadow .25s, background-color .2s;
+}
+:host-context([data-theme="dark"]) .role { background: color-mix(in srgb, var(--bg) 70%, #000); border-color: var(--border); }
+.role:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.role input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+.role .ico {
+  width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; font-size: 19px;
+  background: var(--card); color: var(--text-muted); transition: background-color .2s, color .2s;
+}
+.role .txt { display: grid; gap: 2px; min-width: 0; }
+.role b { font-size: 14px; }
+.role small { font-size: 11.5px; color: var(--text-muted); }
+.role .tick {
+  position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: var(--on-accent); font-size: 11px; opacity: 0; transform: scale(.4);
+  transition: opacity .2s, transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.role .tick app-icon { stroke-width: 3.2; }
+.role.sel { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+.role.sel .ico { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent-ink); }
+.role.sel .tick { opacity: 1; transform: scale(1); }
+.role:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.other { animation: rise .35s ease both; }
+
+/* ---------- dépôt du justificatif ---------- */
+.drop {
+  position: relative; display: grid; justify-items: center; gap: 6px; padding: 30px 18px; text-align: center; cursor: pointer;
+  background: var(--bg); border: 1.5px dashed var(--border-strong); border-radius: 16px; color: var(--text-muted);
+  transition: border-color .2s, background-color .2s, transform .2s;
+}
+:host-context([data-theme="dark"]) .drop { background: color-mix(in srgb, var(--bg) 70%, #000); }
+.drop:hover, .drop.drag { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
+.drop.drag { transform: scale(1.015); }
+.drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.drop b { font-size: 14px; color: var(--text); }
+.drop small { font-size: 12px; }
+.drop u { color: var(--accent-ink); text-underline-offset: 3px; }
+.drop .up {
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 21px; margin-bottom: 4px;
+  background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent-ink);
+  animation: bob 2.6s ease-in-out infinite;
+}
+
+.picked {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg)); border: 1.5px solid var(--accent);
+  animation: pop .45s cubic-bezier(.2,.8,.2,1) both;
+}
+.picked .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 19px; background: var(--accent); color: var(--on-accent); flex: none; }
+.picked .txt { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.picked b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.picked small { font-size: 12px; color: var(--text-muted); }
+.rm {
+  width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border-radius: 50%; cursor: pointer; font-size: 15px;
+  background: transparent; border: 1px solid var(--border-strong); color: var(--text-muted); transition: color .15s, border-color .15s, transform .2s;
+}
+.rm:hover { color: #e5484d; border-color: #e5484d; transform: rotate(90deg); }
+.note { margin: 14px 2px 18px; font-size: 12px; color: var(--text-muted); text-align: center; }
+
+/* ---------- actions ---------- */
+.actions { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; }
+.foot { margin: 18px 0 0; text-align: center; font-size: 12.5px; color: var(--text-muted); }
+
+@media (max-width: 680px) {
+  .steps .lbl { display: none; }
+  .steps li.on .lbl { display: inline; }
+  .roles { grid-template-columns: 1fr; }
+}

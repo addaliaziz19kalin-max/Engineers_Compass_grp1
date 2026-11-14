@@ -1,0 +1,83 @@
+@if (challenge(); as c) {
+  <div class="wrap">
+    <h1 class="page-title a" style="--i:0">Proposer une solution</h1>
+
+    <div class="grid">
+      <section class="panel form a" style="--i:1">
+        <div class="author">
+          <span class="avatar lg">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</span>
+          <div>
+            <b>{{ profile.info().name }}</b>
+            <span class="vis"><app-icon name="users" />Visible par l’entreprise du défi</span>
+          </div>
+        </div>
+
+        <textarea class="text" rows="7" placeholder="Décrivez votre solution : l’idée, la démarche, les choix techniques, les résultats…"
+                  aria-label="Texte de la solution" [value]="text()" (input)="text.set($any($event.target).value)"></textarea>
+
+        <p class="lbl">Dossier de la solution (facultatif)</p>
+        <input #folder class="pick" type="file" webkitdirectory multiple (change)="onPick($event)" tabindex="-1" aria-hidden="true">
+        <input #many class="pick" type="file" multiple (change)="onPick($event)" tabindex="-1" aria-hidden="true">
+
+        @if (files().length === 0) {
+          <div class="drop">
+            <app-icon name="upload" />
+            <b>Importez le dossier de votre projet</b>
+            <small>Le code, le README, les résultats… comme sur GitHub. Les dossiers .git et node_modules sont ignorés.</small>
+            <div class="row">
+              <button type="button" class="btn btn-dark btn-sm" appRipple (click)="folder.click()"><app-icon name="upload" />Importer un dossier</button>
+              <button type="button" class="btn btn-line btn-sm" appRipple (click)="many.click()"><app-icon name="file" />Ajouter des fichiers</button>
+            </div>
+          </div>
+        } @else {
+          <div class="tree">
+            <div class="tree-h">
+              <b>{{ files().length }} fichier{{ files().length > 1 ? 's' : '' }} · {{ size(totalSize()) }}</b>
+              <span>
+                <button type="button" (click)="folder.click()">Dossier</button>
+                <button type="button" (click)="many.click()">Fichiers</button>
+                <button type="button" (click)="clear()">Tout retirer</button>
+              </span>
+            </div>
+            <ul>
+              @for (f of files(); track f.path) {
+                <li>
+                  <app-icon name="file" />
+                  <span class="pth">{{ f.path }}</span>
+                  <small>{{ size(f.file.size) }}</small>
+                  <button type="button" class="rm" aria-label="Retirer ce fichier" (click)="remove(f.path)"><app-icon name="x" /></button>
+                </li>
+              }
+            </ul>
+          </div>
+          @if (skipped() > 0) { <small class="skip">{{ skipped() }} fichier{{ skipped() > 1 ? 's' : '' }} ignoré{{ skipped() > 1 ? 's' : '' }} (.git / node_modules).</small> }
+        }
+
+        <div class="bottom">
+          <a class="btn btn-line btn-sm" appRipple routerLink="/defis">Annuler</a>
+          <button type="button" class="btn btn-primary btn-sm" appRipple [disabled]="sent()" (click)="publish()">Publier</button>
+        </div>
+        @if (error()) { <p class="err" role="alert">{{ error() }}</p> }
+        @if (sent()) { <p class="sent" role="status"><app-icon name="check" />Solution publiée — retour aux défis…</p> }
+      </section>
+
+      <aside class="side">
+        <section class="panel box a" style="--i:2">
+          <h2>Défi concerné</h2>
+          <span class="pill">{{ c.domain }}</span>
+          <b class="ct">{{ c.title }}</b>
+          <p class="hint">{{ c.long }}</p>
+          <a class="btn btn-line btn-sm" appRipple [routerLink]="['/defis', c.id]">Voir le projet</a>
+        </section>
+
+        <section class="panel box a" style="--i:3">
+          <div class="tips-h">
+            <span class="ico"><app-icon name="sparkle" /></span>
+            <h2>Conseils</h2>
+          </div>
+          <ul>@for (t of tips; track t) { <li>{{ t }}</li> }</ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+}

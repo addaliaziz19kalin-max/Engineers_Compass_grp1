@@ -1,0 +1,87 @@
+<div class="wrap">
+  <section class="main">
+    <h1 class="page-title a" style="--i:0">Défis</h1>
+    <p class="page-sub a" style="--i:1">Des défis réels, publiés par des ingénieurs et des entreprises.</p>
+
+    <div class="chips a" style="--i:2" role="tablist" aria-label="Domaines">
+      @for (d of domains; track d) {
+        <button type="button" role="tab" [class.on]="filter() === d" [attr.aria-selected]="filter() === d" (click)="setFilter(d)">{{ d }}</button>
+      }
+    </div>
+
+    <div class="cards">
+      @for (c of list(); track c.id; let i = $index) {
+        <article class="card" [class.sel]="selectedId() === c.id" [style.--i]="i" tabindex="0"
+                 (click)="selectedId.set(c.id)" (keydown.enter)="selectedId.set(c.id)">
+          <div class="card-top">
+            <span class="pill">{{ c.domain }}</span>
+            <small class="who" [title]="c.author.name">{{ by(c) }}</small>
+          </div>
+          <h2>{{ c.title }}</h2>
+          <p>{{ c.text }}</p>
+          <div class="card-actions">
+            <button type="button" class="btn btn-line btn-sm" appRipple (click)="view(c.id); $event.stopPropagation()">Voir le projet</button>
+            @if (c.mine) {
+              <button type="button" class="btn btn-dark btn-sm" appRipple (click)="selectedId.set(c.id); $event.stopPropagation()">Solutions reçues ({{ received(c.id).length }})</button>
+            } @else {
+              <button type="button" class="btn btn-dark btn-sm" appRipple [class.done]="isProposed(c.id)"
+                      (click)="propose(c.id); $event.stopPropagation()">
+                @if (isProposed(c.id)) { <app-icon name="check" /> Solution envoyée } @else { Proposer une solution }
+              </button>
+            }
+            <app-share-menu variant="icon" align="end" [item]="svc.shareItem(c)" />
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">Aucun défi dans ce domaine pour le moment.</p>
+      }
+    </div>
+  </section>
+
+  <!-- Panneau de détail -->
+  <aside class="detail">
+    @if (selected(); as c) {
+      <div class="panel box" [attr.data-id]="c.id">
+        <div class="top"><span class="pill ok">Ouvert</span><app-share-menu variant="icon" align="end" [item]="svc.shareItem(c)" /></div>
+        <h2>{{ c.title }}</h2>
+        <small class="by">
+          Publié par <a [routerLink]="c.author.link">{{ c.author.name }}</a>
+          @if (c.author.kind === 'company') { <i class="ver"><app-icon name="check" /></i> } @else if (c.author.role) { · {{ c.author.role }} }
+        </small>
+        <p class="long">{{ c.long }}</p>
+
+        @if (c.skills.length) {
+          <h3>Compétences</h3>
+          <div class="skills">@for (s of c.skills; track s) { <span class="pill ok">{{ s }}</span> }</div>
+        }
+
+        <h3>Avancement du projet</h3>
+        <div class="progress"><i [style.width.%]="c.progress"></i></div>
+        <small class="meta">{{ c.progress }} % · {{ count(c) }} solutions proposées</small>
+
+        <button type="button" class="btn btn-line btn-sm full" appRipple (click)="view(c.id)">Voir le projet</button>
+        @if (c.mine) {
+          <h3>Solutions reçues ({{ received(c.id).length }})</h3>
+          @for (s of received(c.id); track s.id) {
+            <div class="sol" [id]="'sol-' + s.id" [class.hl]="focusId() === s.id">
+              <span class="avatar sm">{{ s.initials }}</span>
+              <div>
+                <b>{{ s.name }}</b>
+                <small>{{ s.role }} · {{ ago(s.at) }}</small>
+                <p>{{ s.text }}</p>
+                <small>{{ s.files }} fichiers importés</small>
+              </div>
+              <span class="pill ok">{{ s.score }} %</span>
+            </div>
+          } @empty {
+            <p class="hint">Personne n’a encore proposé de solution. Vous recevrez une notification dès qu’un membre résout ce défi.</p>
+          }
+        } @else {
+          <button type="button" class="btn btn-dark btn-sm full" appRipple [class.done]="isProposed(c.id)" (click)="propose(c.id)">
+            @if (isProposed(c.id)) { <app-icon name="check" /> Solution envoyée } @else { Proposer une solution }
+          </button>
+        }
+      </div>
+    }
+  </aside>
+</div>

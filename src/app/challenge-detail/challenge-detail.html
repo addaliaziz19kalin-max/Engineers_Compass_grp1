@@ -1,0 +1,115 @@
+@if (challenge(); as c) {
+  <div class="wrap">
+    <div class="main">
+      <a class="back a" style="--i:0" routerLink="/defis"><app-icon name="arrow-left" /> Retour aux défis</a>
+
+      <article class="panel head a" style="--i:1">
+        <div class="cover"></div>
+        <div class="body">
+          <div class="top">
+            <span class="pill">{{ c.domain }}</span>
+            <span class="pill ok">Ouvert</span>
+            @if (shareItem(); as it) { <app-share-menu class="push" variant="icon" align="end" [item]="it" /> }
+          </div>
+          <h1>{{ c.title }}</h1>
+          <small class="by">
+            Publié par <a [routerLink]="c.author.link">{{ c.author.name }}</a>
+            @if (c.author.kind === 'company') { <i class="ver"><app-icon name="check" /></i> } @else if (c.author.role) { · {{ c.author.role }} }
+          </small>
+        </div>
+      </article>
+
+      <section class="panel box a" style="--i:2">
+        <h2>Description du projet</h2>
+        @for (p of c.details; track $index) { <p class="desc">{{ p }}</p> }
+        @if (c.goals.length) {
+          <hr>
+          <h2>Objectifs</h2>
+          <ul class="reqs">
+            @for (g of c.goals; track g) { <li><app-icon name="check" />{{ g }}</li> }
+          </ul>
+        }
+      </section>
+
+      <section class="panel box a" style="--i:3">
+        <h2>Aide à la résolution</h2>
+        @if (c.resources.length) {
+          <p class="hint">Documents fournis par l’entreprise pour vous aider à démarrer.</p>
+          <div class="files">
+            @for (r of c.resources; track r.name) {
+              <a class="file" [href]="r.url" [attr.download]="r.name">
+                <span class="ico"><app-icon name="file" /></span>
+                <span class="nm"><b>{{ r.name }}</b><small>{{ r.kind }} · {{ r.size }}</small></span>
+                <span class="dl"><app-icon name="upload" />Télécharger</span>
+              </a>
+            }
+          </div>
+        } @else {
+          <p class="hint">Aucun document d’aide n’est fourni pour ce défi.</p>
+        }
+      </section>
+
+      <!-- mon défi : solutions envoyées par les autres membres -->
+      @if (c.mine) {
+        <section class="panel box a" style="--i:4">
+          <h2>Solutions reçues ({{ received().length }})</h2>
+          @for (r of received(); track r.id) {
+            <div class="sol">
+              <span class="avatar">{{ r.initials }}</span>
+              <div>
+                <b>{{ r.name }}</b>
+                <small>{{ r.role }} · {{ ago(r.at) }}</small>
+                <p>{{ r.text }}</p>
+                <small>{{ r.files }} fichiers importés</small>
+              </div>
+              <span class="pill ok">{{ r.score }} %</span>
+            </div>
+          } @empty {
+            <p class="hint">Personne n’a encore proposé de solution. Vous recevrez une notification dès qu’un membre résout ce défi.</p>
+          }
+        </section>
+      }
+
+      <!-- solutions publiées : visibles par l'entreprise et par les autres membres -->
+      @if (mine(); as s) {
+        <section class="panel box a" style="--i:4">
+          <h2>Solutions proposées</h2>
+          <p class="hint">Les solutions envoyées sont visibles par l’entreprise et par les membres de la communauté.</p>
+          <div class="sol">
+            <span class="avatar">@if (profile.avatar(); as photo) { <img [src]="photo" alt=""> } @else { {{ profile.initials() }} }</span>
+            <div>
+              <b>{{ profile.info().name }}</b>
+              <small>Votre solution · {{ ago(s.at) }}</small>
+              <p>{{ s.text }}</p>
+              <small>{{ s.files.length }} fichier{{ s.files.length > 1 ? 's' : '' }} importé{{ s.files.length > 1 ? 's' : '' }}</small>
+            </div>
+          </div>
+        </section>
+      }
+    </div>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:2">
+        @if (c.mine) {
+          <h2>Votre défi</h2>
+          <p class="hint">Vous êtes l’auteur de ce défi. Chaque solution reçue apparaît ici et dans la page Défis.</p>
+        } @else {
+          <h2>Participer au défi</h2>
+          <p class="hint">Écrivez votre solution et importez le dossier de votre projet. {{ c.author.kind === 'company' ? 'L’entreprise' : c.author.name }} la recevra avec votre profil vérifié.</p>
+          <button type="button" class="btn btn-primary" appRipple [class.done]="proposed()" [disabled]="proposed()" (click)="propose()">
+            @if (proposed()) { <app-icon name="check" /> Solution envoyée } @else { Proposer une solution }
+          </button>
+        }
+
+        @if (c.skills.length) {
+          <h3>Compétences</h3>
+          <div class="skills">@for (s of c.skills; track s) { <span class="pill ok">{{ s }}</span> }</div>
+        }
+
+        <h3>Avancement du projet</h3>
+        <div class="progress"><i [style.width.%]="c.progress"></i></div>
+        <small>{{ c.progress }} % · {{ count() }} solutions proposées</small>
+      </section>
+    </aside>
+  </div>
+}

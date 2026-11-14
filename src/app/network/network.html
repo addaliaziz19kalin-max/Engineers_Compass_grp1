@@ -1,0 +1,117 @@
+<div class="wrap">
+  <aside class="panel nav a" style="--i:0" aria-label="Gérer mon réseau">
+    <h2>Gérer mon réseau</h2>
+    @for (m of menu(); track m.id) {
+      <a [routerLink]="m.link" [class.on]="section() === m.id"><app-icon [name]="m.icon" />{{ m.label }}<b>{{ m.count }}</b></a>
+    }
+  </aside>
+
+  <main class="main">
+    @switch (section()) {
+
+      <!-- ===== Aperçu ===== -->
+      @case ('overview') {
+        <section class="panel box a" style="--i:1">
+          <div class="h"><h2>Invitations <span class="num">{{ net.invitations().length }}</span></h2><a routerLink="/reseau/invitations">Tout voir</a></div>
+          @for (p of net.invitations().slice(0, 3); track p.id) {
+            <div class="line">
+              <a class="avatar lg" [routerLink]="['/membre', slug(p.name)]">{{ p.initials }}</a>
+              <div class="txt"><b><a class="lnk" [routerLink]="['/membre', slug(p.name)]">{{ p.name }}</a></b><small>{{ p.role }}</small><small>{{ p.mutual }} contacts en commun</small></div>
+              <button type="button" class="btn btn-line btn-sm" (click)="net.ignore(p.id)">Ignorer</button>
+              <button type="button" class="btn btn-primary btn-sm" appRipple (click)="net.accept(p.id)">Accepter</button>
+            </div>
+          } @empty { <p class="none">Aucune invitation en attente.</p> }
+        </section>
+
+        <div class="h2row a" style="--i:2">
+          <h2>Personnes que vous pourriez connaître</h2>
+          @if (!showAllSuggestions() && net.suggestions().length > 4) {
+            <button type="button" class="more" (click)="showAllSuggestions.set(true)">Voir plus</button>
+          }
+        </div>
+        <div class="cards a" style="--i:3">
+          @for (p of suggestions(); track p.id) {
+            <article class="panel card">
+              <a class="avatar xl" [routerLink]="['/membre', slug(p.name)]">{{ p.initials }}</a>
+              <b><a class="lnk" [routerLink]="['/membre', slug(p.name)]">{{ p.name }}</a></b>
+              <small>{{ p.role }}</small>
+              <button type="button" class="connect" [class.sent]="isRequested(p.name)" (click)="net.request(p)">
+                <app-icon [name]="isRequested(p.name) ? 'check' : 'user-plus'" />{{ isRequested(p.name) ? 'Demande envoyée' : 'Se connecter' }}
+              </button>
+            </article>
+          } @empty {
+            <p class="none wide">Aucune suggestion pour le moment.</p>
+          }
+        </div>
+      }
+
+      <!-- ===== Contacts (comme les amis Facebook) ===== -->
+      @case ('contacts') {
+        <section class="panel box a" style="--i:1">
+          <div class="h">
+            <h2>Contacts <span class="num">{{ net.contacts().length }}</span></h2>
+            <label class="find"><app-icon name="search" /><input type="search" placeholder="Rechercher un contact" aria-label="Rechercher un contact" [value]="query()" (input)="query.set($any($event.target).value)"></label>
+          </div>
+          <div class="friends">
+            @for (c of filteredContacts(); track c.id; let i = $index) {
+              <article class="friend" [style.--i]="i">
+                <a class="avatar xl" [routerLink]="['/membre', slug(c.name)]">{{ c.initials }}</a>
+                <div class="txt"><b><a class="lnk" [routerLink]="['/membre', slug(c.name)]">{{ c.name }}</a></b><small>{{ c.role }}</small><small>{{ c.mutual }} contacts en commun</small></div>
+                <div class="btns">
+                  <button type="button" class="btn btn-primary btn-sm" appRipple (click)="message()"><app-icon name="message" />Message</button>
+                  <button type="button" class="btn btn-line btn-sm" (click)="net.removeContact(c.id)">Retirer</button>
+                </div>
+              </article>
+            } @empty { <p class="none">Aucun contact trouvé.</p> }
+          </div>
+        </section>
+      }
+
+      <!-- ===== Invitations reçues ===== -->
+      @case ('invitations') {
+        <section class="panel box a" style="--i:1">
+          <div class="h"><h2>Invitations reçues <span class="num">{{ net.invitations().length }}</span></h2></div>
+          @for (p of net.invitations(); track p.id; let i = $index) {
+            <div class="line" [style.--i]="i">
+              <a class="avatar lg" [routerLink]="['/membre', slug(p.name)]">{{ p.initials }}</a>
+              <div class="txt"><b><a class="lnk" [routerLink]="['/membre', slug(p.name)]">{{ p.name }}</a></b><small>{{ p.role }}</small><small>{{ p.mutual }} contacts en commun</small></div>
+              <button type="button" class="btn btn-line btn-sm" (click)="net.ignore(p.id)">Ignorer</button>
+              <button type="button" class="btn btn-primary btn-sm" appRipple (click)="net.accept(p.id)">Accepter</button>
+            </div>
+          } @empty {
+            <p class="none">Aucune invitation en attente. <a routerLink="/reseau/contacts">Voir mes contacts</a></p>
+          }
+        </section>
+
+        <!-- demandes que j'ai envoyées (« Se connecter » depuis un profil, une suggestion ou la recherche) -->
+        <section class="panel box a" style="--i:2">
+          <div class="h"><h2>Invitations envoyées <span class="num">{{ net.sent().length }}</span></h2></div>
+          @for (p of net.sent(); track p.id; let i = $index) {
+            <div class="line" [style.--i]="i">
+              <a class="avatar lg" [routerLink]="['/membre', slug(p.name)]">{{ p.initials }}</a>
+              <div class="txt"><b><a class="lnk" [routerLink]="['/membre', slug(p.name)]">{{ p.name }}</a> <span class="pill">En attente</span></b><small>{{ p.role }}</small></div>
+              <button type="button" class="btn btn-line btn-sm" (click)="net.cancelRequest(p.name)">Annuler la demande</button>
+            </div>
+          } @empty {
+            <p class="none">Aucune demande en attente de réponse.</p>
+          }
+        </section>
+      }
+
+      <!-- ===== Pages suivies ===== -->
+      @case ('pages') {
+        <section class="panel box a" style="--i:1">
+          <div class="h"><h2>Pages suivies <span class="num">{{ net.pages().length }}</span></h2></div>
+          @for (p of net.pages(); track p.id; let i = $index) {
+            <div class="line" [style.--i]="i">
+              <a class="logo" [routerLink]="['/page', slug(p.name)]">{{ p.initials }}</a>
+              <div class="txt"><b><a class="lnk" [routerLink]="['/page', slug(p.name)]">{{ p.name }}</a> <span class="pill ok">Vérifiée</span></b><small>{{ p.sector }}</small><small>{{ p.followers }}</small></div>
+              <a class="btn btn-line btn-sm" routerLink="/offres">Voir les offres</a>
+              <button type="button" class="btn btn-line btn-sm" (click)="net.unfollow(p.id)"><app-icon name="check" />Suivie</button>
+            </div>
+          } @empty { <p class="none">Vous ne suivez aucune page.</p> }
+        </section>
+      }
+    }
+  </main>
+</div>

@@ -1,0 +1,60 @@
+<div class="wrap">
+  <h1 class="page-title a" style="--i:0">Tableau de bord d’activité</h1>
+  <p class="page-sub a" style="--i:1">Votre activité des 7 derniers jours.</p>
+
+  <div class="grid">
+    <div class="main">
+      <div class="stats">
+        @for (s of stats(); track s.label; let i = $index) {
+          <div class="panel stat a" [style.--i]="i + 1">
+            <span class="ico"><app-icon [name]="s.icon" /></span>
+            <div><b>{{ s.value }}</b><small>{{ s.label }}</small></div>
+          </div>
+        }
+      </div>
+
+      <section class="panel box a" style="--i:3">
+        <h2>Vues du profil par jour</h2>
+        <div class="bars" role="img" aria-label="Vues du profil par jour sur 7 jours">
+          @for (d of views; track d.day; let i = $index) {
+            <div class="col">
+              <i [class.peak]="d.v === 100" [style.height.%]="d.v" [style.--i]="i" [attr.title]="d.day"></i>
+              <span>{{ d.day }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="panel box a" style="--i:4">
+        <h2>Activité récente</h2>
+        @for (r of recent(); track $index) {
+          <div class="item">
+            <span class="ico"><app-icon [name]="r.icon" /></span>
+            <div><b>{{ r.title }}</b><small>{{ r.sub }}</small></div>
+          </div>
+        } @empty {
+          <p class="none">Aucune activité pour le moment.</p>
+        }
+      </section>
+    </div>
+
+    <aside class="side">
+      <section class="panel box a" style="--i:2">
+        <h2>Score de confiance</h2>
+        <p class="score"><b>{{ score }}</b><span>/ 100</span></p>
+        <div class="progress"><i [style.width.%]="score"></i></div>
+        <small class="note">Le score augmente avec vos projets validés et vos contributions.</small>
+      </section>
+
+      <section class="panel box a" style="--i:3">
+        <h2>Pour progresser</h2>
+        @for (t of todo; track t.title) {
+          <a class="item" [routerLink]="t.link">
+            <span class="ico"><app-icon [name]="t.icon" /></span>
+            <div><b>{{ t.title }}</b><small>{{ t.sub }}</small></div>
+          </a>
+        }
+      </section>
+    </aside>
+  </div>
+</div>

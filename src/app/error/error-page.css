@@ -1,0 +1,17 @@
+:host { display: block; }
+.err { display: grid; justify-items: center; text-align: center; max-width: 520px; }
+.orb { position: relative; display: grid; place-items: center; width: 178px; height: 178px; margin-bottom: 20px; border-radius: 50%; font-size: 64px; color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); animation: pop .6s cubic-bezier(.34,1.56,.64,1) both; }
+.orb app-icon { stroke-width: 1.6; }
+.ring { position: absolute; inset: 26px; border-radius: 50%; border: 2px dashed var(--accent); animation: spin 28s linear infinite; }
+.orb.srv { color: #f0902f; background: color-mix(in srgb, #f0902f 16%, transparent); }
+.orb.srv .ring { border-color: #f0902f; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+h1 { margin: 0; font-size: 64px; font-weight: 800; line-height: 1; letter-spacing: -.02em; color: var(--accent); }
+h1.word { font-size: 40px; }
+h2 { margin: 12px 0 8px; font-size: 20px; font-weight: 800; }
+p { margin: 0; max-width: 420px; font-size: 13.5px; line-height: 1.7; color: var(--text-muted); }
+.btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 24px 0 18px; }
+.btns .btn { width: auto; height: 40px; padding: 0 18px; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.help { font-size: 12px; }
+.help a { color: var(--accent-ink); font-weight: 800; }

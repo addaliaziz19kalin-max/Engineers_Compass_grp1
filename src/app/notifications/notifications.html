@@ -1,0 +1,38 @@
+<div class="wrap">
+  <div class="head a" style="--i:0">
+    <h1 class="page-title">Notifications</h1>
+    <button type="button" class="mark" [disabled]="store.unreadCount() === 0" (click)="store.markAllRead()">Tout marquer comme lu</button>
+  </div>
+
+  <section class="panel box a" style="--i:1">
+    <div class="chips" role="tablist" aria-label="Filtres">
+      @for (f of filters(); track f.id) {
+        <button type="button" role="tab" [class.on]="filter() === f.id" [attr.aria-selected]="filter() === f.id" (click)="filter.set(f.id)">{{ f.label }}</button>
+      }
+    </div>
+
+    @if (today().length) {
+      <p class="grp">Aujourd’hui</p>
+      @for (n of today(); track n.id; let i = $index) {
+        <button type="button" class="n" [class.unread]="n.unread" [style.--i]="i" (click)="store.open(n)">
+          <span class="ico"><app-icon [name]="n.icon" /></span>
+          <span class="txt"><b>{{ n.text }}</b><small>{{ n.time }}</small></span>
+          @if (n.unread) { <i class="dot"></i> }
+        </button>
+      }
+    }
+    @if (earlier().length) {
+      <p class="grp">Plus tôt</p>
+      @for (n of earlier(); track n.id; let i = $index) {
+        <button type="button" class="n" [class.unread]="n.unread" [style.--i]="i + 2" (click)="store.open(n)">
+          <span class="ico"><app-icon [name]="n.icon" /></span>
+          <span class="txt"><b>{{ n.text }}</b><small>{{ n.time }}</small></span>
+          @if (n.unread) { <i class="dot"></i> }
+        </button>
+      }
+    }
+    @if (!today().length && !earlier().length) {
+      <p class="empty">{{ store.items().length === 0 ? 'Aucune notification pour le moment.' : 'Aucune notification dans cette catégorie.' }}</p>
+    }
+  </section>
+</div>

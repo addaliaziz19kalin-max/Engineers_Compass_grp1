@@ -1,0 +1,29 @@
+.logo img { height: 40px; width: auto; display: block; }
+.logo .only-light { display: var(--light-display); }
+.logo .only-dark  { display: var(--dark-display); }
+.foot { margin-top: auto; background: var(--card); border-top: 1px solid var(--border); }
+:host-context([data-theme="dark"]) .foot { background: color-mix(in srgb, var(--bg) 82%, #1b2b3d); }
+.foot-in { max-width: 1280px; margin: 0 auto; padding: 28px 24px 36px; display: flex; align-items: flex-start; gap: 64px; }
+.foot .logo img { height: 40px; }
+.cols { display: flex; gap: 56px; }
+.cols div { display: grid; gap: 8px; align-content: start; }
+.cols h4 { margin: 0 0 4px; font-size: 12px; font-weight: 800; }
+.cols a { font-size: 11.5px; color: var(--text-muted); transition: color .2s; }
+.cols a:hover { color: var(--accent-ink); }
+.copy { margin: 0 0 0 auto; font-size: 11.5px; line-height: 1.6; color: var(--text-muted); }
+@media (max-width: 800px) {
+  .foot-in { flex-direction: column; gap: 24px; }
+  .copy { margin: 0; }
+  .cols { gap: 36px; flex-wrap: wrap; }
+}
+
+/* pied de page fixe des pages du compte (<app-site-footer class="bar">) : même contenu, plus compact */
+:host(.bar) .foot { margin-top: 0; }
+:host(.bar) .foot-in { padding: 10px 24px 12px 24px; padding-right: 96px; gap: 48px; align-items: center; }
+:host(.bar) .logo img { height: 34px; }
+:host(.bar) .cols { gap: 48px; }
+:host(.bar) .cols div { gap: 3px; }
+:host(.bar) .cols h4 { margin-bottom: 2px; }
+/* écran peu haut : on garde le logo et le copyright, les colonnes de liens se masquent */
+@media (max-height: 640px) { :host(.bar) .cols { display: none; } }
+@media (max-width: 800px) { :host(.bar) .cols { display: none; } :host(.bar) .foot-in { gap: 12px; padding-right: 24px; } }

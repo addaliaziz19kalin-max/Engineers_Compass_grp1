@@ -1,0 +1,8 @@
+<section class="features" id="decouvrir" aria-label="Pourquoi Engineers Compass">
+  @for (f of items; track f.title; let i = $index) {
+    <article class="feature" [appReveal]="i">
+      <h2>{{ f.title }}</h2>
+      <p>{{ f.text }}</p>
+    </article>
+  }
+</section>

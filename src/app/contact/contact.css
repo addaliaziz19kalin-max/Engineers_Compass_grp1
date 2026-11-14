@@ -1,0 +1,50 @@
+.wrap { max-width: 1000px; margin: 0 auto; padding: 28px 24px 72px; display: grid; grid-template-columns: minmax(0, 1fr) 292px; gap: 20px; align-items: start; }
+.main, .side { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.page-title { font-size: 22px; }
+.page-sub { font-size: 11px; margin-bottom: 14px; }
+.form { padding: 20px 16px; display: grid; gap: 16px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: grid; gap: 8px; min-width: 0; }
+.field label { font-size: 11px; font-weight: 800; }
+.input { position: relative; display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); transition: border-color .2s, box-shadow .25s; }
+:host-context([data-theme="dark"]) .input, :host-context([data-theme="dark"]) textarea { background: color-mix(in srgb, var(--bg) 70%, #000); }
+.input:focus-within, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent); }
+.input app-icon { font-size: 15px; flex: none; }
+.input input, .input select { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 12.5px; color: var(--text); }
+.input input::placeholder { color: var(--text-muted); }
+.select select { appearance: none; padding-right: 24px; cursor: pointer; }
+.select app-icon { position: absolute; right: 12px; pointer-events: none; }
+textarea { width: 100%; min-height: 124px; padding: 12px; resize: vertical; border-radius: 8px; border: 1px solid var(--border); outline: 0; background: var(--bg); font: inherit; font-size: 12.5px; line-height: 1.6; color: var(--text); transition: border-color .2s, box-shadow .25s; }
+textarea::placeholder { color: var(--text-muted); }
+.err { margin: 0; font-size: 12px; font-weight: 600; color: #d9534f; }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.attach { display: inline-flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-muted); cursor: pointer; transition: color .2s; }
+.attach:hover, .attach:focus-within { color: var(--accent-ink); }
+.attach input { position: absolute; opacity: 0; pointer-events: none; }
+.attach app-icon { font-size: 15px; }
+.foot .btn { width: auto; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 20px; }
+
+.done { display: grid; justify-items: center; gap: 8px; padding: 40px 12px; text-align: center; }
+.done h2 { margin: 6px 0 0; font-size: 17px; }
+.done p { margin: 0 0 10px; font-size: 12.5px; color: var(--text-muted); }
+.ok { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; font-size: 26px; color: #fff; background: #4fb468; animation: spinin .6s cubic-bezier(.34,1.56,.64,1) both; }
+.done .btn { width: auto; padding: 0 18px; }
+
+.box { display: grid; gap: 12px; padding: 18px 16px; }
+.box h2 { margin: 0 0 2px; font-size: 14px; font-weight: 800; }
+.item { display: flex; align-items: center; gap: 12px; }
+.item > span:nth-child(2) { display: grid; gap: 2px; min-width: 0; }
+.item b { font-size: 12px; }
+.item small { font-size: 11px; }
+.ico { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 10px; font-size: 16px; background: var(--badge-bg); color: var(--badge-fg); }
+:host-context([data-theme="dark"]) .ico { background: #16341f; color: #6fd08a; }
+.q { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text); transition: color .2s; }
+.q:hover { color: var(--accent-ink); }
+.q app-icon { font-size: 14px; color: var(--text-muted); }
+.bot { width: 100%; padding: 4px 0 0; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+.bot small { color: var(--text-muted); line-height: 1.5; }
+.bot:hover .ico { transform: scale(1.08); }
+.bot .ico { transition: transform .2s; }
+
+@media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .two { grid-template-columns: 1fr; } }

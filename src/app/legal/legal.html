@@ -1,0 +1,23 @@
+<div class="wrap">
+  <aside class="panel toc a" style="--i:0" aria-label="Sommaire">
+    <h2>Sommaire</h2>
+    @for (s of doc().sections; track s.title; let i = $index) {
+      <a href="#" [class.on]="active() === i" [attr.aria-current]="active() === i ? 'true' : null" (click)="$event.preventDefault(); go(i)">{{ i + 1 }}. {{ s.title }}</a>
+    }
+  </aside>
+
+  <article class="panel doc a" style="--i:1">
+    <h1>{{ doc().title }}</h1>
+    <p class="upd">Dernière mise à jour : {{ doc().updated }}</p>
+
+    @for (s of doc().sections; track s.title; let i = $index) {
+      <section [id]="'s' + (i + 1)">
+        <h2>{{ i + 1 }}. {{ s.title }}</h2>
+        <p>{{ s.text }}</p>
+        @if (s.list) {
+          <ul>@for (l of s.list; track l) { <li><app-icon name="check" />{{ l }}</li> }</ul>
+        }
+      </section>
+    }
+  </article>
+</div>

@@ -1,0 +1,69 @@
+<div
+  #stage
+  class="stage"
+  [class.hot]="hot()"
+  (pointerenter)="onEnter()"
+  (pointerleave)="onLeave()"
+>
+  <!-- Boussole (SVG, centre = 280,280) -->
+  <svg #compass class="compass" viewBox="0 0 560 560" role="img" aria-label="Logo Engineers Compass : un C entourant une boussole">
+          <defs>
+            <radialGradient id="inner" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   style="stop-color:var(--c-in-1)"/>
+              <stop offset="100%" style="stop-color:var(--c-in-2)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- orbites -->
+          <circle class="orbit orbit-1" cx="280" cy="280" r="259.5" fill="none" stroke-width="1.2" style="stroke:var(--orbit)"/>
+          <circle class="orbit orbit-2" cx="280" cy="280" r="215"   fill="none" stroke-width="1.2" style="stroke:var(--orbit);opacity:var(--orbit-2-op)"/>
+
+          <!-- disque intérieur -->
+          <circle cx="280" cy="280" r="118" fill="url(#inner)"/>
+
+          <!-- le « C » : arc de 284°, ouvert à droite (±42°) -->
+          <path d="M 385.5 184.9 A 142 142 0 1 0 385.5 375.1"
+                fill="none" stroke-width="48" stroke-linecap="butt" style="stroke:var(--c-ring)"/>
+
+          <!-- 4 pointes cardinales -->
+          <g style="fill:var(--star)">
+            <path class="pt" d="M280 174 L289 232 L271 232 Z"/>   <!-- N -->
+            <path class="pt" d="M386 280 L328 289 L328 271 Z"/>   <!-- E -->
+            <path class="pt" d="M280 386 L271 328 L289 328 Z"/>   <!-- S -->
+            <path class="pt" d="M174 280 L232 271 L232 289 Z"/>   <!-- O -->
+          </g>
+
+          <!-- aiguille (NE ↔ SO) -->
+          <g #needle transform="rotate(-48 280 280)">
+            <path d="M280 280 L376 280 L280 266 Z" style="fill:var(--needle-a)"/>
+            <path d="M280 280 L376 280 L280 294 Z" style="fill:var(--needle-b)"/>
+            <path d="M280 280 L184 280 L280 266 Z" style="fill:var(--needle-d)"/>
+            <path d="M280 280 L184 280 L280 294 Z" style="fill:var(--needle-c)"/>
+          </g>
+
+          <!-- pivot -->
+          <circle cx="280" cy="280" r="16" style="fill:var(--needle-a)"/>
+          <circle cx="280" cy="280" r="8.5" fill="#fff"/>
+          <circle cx="280" cy="280" r="4.2" style="fill:var(--pivot-core)"/>
+        </svg>
+
+  <!-- cartes flottantes -->
+  <article class="float f-profile" data-z="46">
+    <div class="avatar" aria-hidden="true">AB</div>
+    <div>
+      <strong>Profil vérifié</strong>
+      <span class="sub">Élève ingénieur</span>
+    </div>
+  </article>
+
+  <article class="float f-challenge" data-z="-34">
+    <span class="tag">Défi publié</span>
+    <strong>Optimiser un réseau de capteurs</strong>
+  </article>
+
+  <article class="float f-test" data-z="60">
+    <strong>Test réussi · Python</strong>
+    <div class="bar" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" aria-label="Score du test"><i></i></div>
+    <span class="sub">Projet validé avant partage</span>
+  </article>
+</div>

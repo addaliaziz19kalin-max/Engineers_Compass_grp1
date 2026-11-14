@@ -1,0 +1,44 @@
+:host { display: block; }
+.comments { display: grid; gap: 12px; padding: 12px 0 10px; border-top: 1px solid var(--border); animation: rise .3s cubic-bezier(.2,.8,.2,1) both; }
+.avatar {
+  display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%;
+  font-size: 11px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #489e67, #277885);
+}
+.c { display: flex; align-items: flex-start; gap: 10px; }
+.more { position: relative; flex: none; }
+.bubble { display: grid; gap: 2px; min-width: 0; padding: 8px 12px; border-radius: 14px; background: color-mix(in srgb, var(--text) 6%, transparent); }
+.bubble b { font-size: 12.5px; }
+.bubble p { margin: 0; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.bubble small { font-size: 10.5px; color: var(--text-muted); }
+.rm {
+  display: grid; place-items: center; flex: none; width: 24px; height: 24px; margin-top: 4px; padding: 0; border: 0; border-radius: 50%;
+  background: none; color: var(--text-muted); cursor: pointer; transition: background-color .2s, color .2s;
+}
+.rm:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+.rm app-icon { font-size: 16px; }
+.pop {
+  position: absolute; top: 100%; left: 0; z-index: 5; min-width: 150px; margin-top: 4px; padding: 6px; border: 1px solid var(--border); border-radius: 12px;
+  background: var(--card); box-shadow: var(--card-shadow); animation: drop .18s cubic-bezier(.2,.8,.2,1) both;
+}
+.pop button {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; background: none; cursor: pointer;
+  font: inherit; font-size: 12.5px; font-weight: 700; color: var(--text); text-align: left; transition: background-color .2s;
+}
+.pop button:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.pop app-icon { font-size: 16px; color: var(--text-muted); }
+@keyframes drop { from { opacity: 0; transform: translateY(-6px); } }
+.none { margin: 0; font-size: 12.5px; color: var(--text-muted); }
+.write { display: flex; align-items: center; gap: 10px; }
+.field {
+  display: flex; align-items: center; flex: 1; min-width: 0; padding: 0 6px 0 14px; border: 1px solid var(--border); border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 4%, transparent); transition: border-color .2s, box-shadow .2s;
+}
+.field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.field input { flex: 1; min-width: 0; height: 38px; border: 0; outline: 0; background: none; font: inherit; font-size: 13px; color: var(--text); }
+.send {
+  position: relative; overflow: hidden; display: grid; place-items: center; flex: none; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--accent); color: var(--on-accent); cursor: pointer; transition: transform .2s, opacity .2s;
+}
+.send:hover:not(:disabled) { transform: translateY(-1px); }
+.send:disabled { opacity: .4; cursor: default; }
+.send app-icon { font-size: 15px; }

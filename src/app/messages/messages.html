@@ -1,0 +1,117 @@
+<div class="wrap">
+  <!-- liste -->
+  <aside class="panel list a" style="--i:0">
+    <header>
+      <h1>Messages</h1>
+      <button type="button" class="new" appRipple [attr.aria-expanded]="composing()" (click)="openNew()"><app-icon name="plus" />Nouveau</button>
+    </header>
+    <div class="chips">
+      <button type="button" [class.on]="tab() === 'contacts'" (click)="setTab('contacts')">Contacts</button>
+      <button type="button" [class.on]="tab() === 'groups'" (click)="setTab('groups')">Groupes</button>
+      <button type="button" [class.on]="tab() === 'spam'" (click)="setTab('spam')">Spam@if (spamCount() > 0) { ({{ spamCount() }}) }</button>
+    </div>
+
+    <div class="convs">
+      @for (c of list(); track c.id; let i = $index) {
+        <button type="button" class="conv" [class.sel]="!composing() && c.id === selected().id" [style.--i]="i" (click)="select(c.id)">
+          <span class="ava">{{ c.initials }}</span>
+          <span class="txt">
+            <b>{{ c.name }} @if (c.verified) { <i class="ver">✓</i> }</b>
+            <small>{{ svc.preview(c) }}</small>
+          </span>
+          @if (c.unread) { <i class="dot">{{ c.unread }}</i> }
+        </button>
+      } @empty {
+        <p class="none">{{ tab() === 'spam' ? 'Aucun message dans les indésirables.' : 'Aucune conversation.' }}</p>
+      }
+    </div>
+  </aside>
+
+  <!-- conversation -->
+  <section class="panel chat a" style="--i:1">
+    @if (composing()) {
+      <!-- nouveau message -->
+      <header class="newh">
+        <div>
+          <b>Nouveau message</b>
+          <small>Écrivez à un membre, même s’il n’est pas dans vos contacts</small>
+        </div>
+        <button type="button" class="x" aria-label="Fermer" (click)="closeNew()"><app-icon name="x" /></button>
+      </header>
+
+      <div class="to">
+        <label for="to-q">À :</label>
+        @if (recipient(); as r) {
+          <span class="chosen">
+            <span class="ava sm">{{ r.initials }}</span>{{ r.name }}
+            <button type="button" aria-label="Changer de destinataire" (click)="clearRecipient()"><app-icon name="x" /></button>
+          </span>
+        } @else {
+          <input id="to-q" type="text" placeholder="Rechercher une personne…" autocomplete="off" [value]="query()" (input)="query.set($any($event.target).value)">
+        }
+      </div>
+
+      @if (recipient(); as r) {
+        <div class="blank">
+          @if (isContact(r.name)) {
+            <p>{{ r.name }} est dans vos contacts : la discussion s’ouvrira dans <b>Contacts</b>.</p>
+          } @else {
+            <p class="notice" role="status"><app-icon name="alert" />{{ r.name }} n’est pas dans vos contacts : votre message sera placé dans ses indésirables (<b>Spam</b>).</p>
+          }
+        </div>
+      } @else {
+        <div class="people">
+          @for (p of results(); track p.id) {
+            <button type="button" class="person" (click)="pick(p)">
+              <span class="ava">{{ p.initials }}</span>
+              <span class="txt"><b>{{ p.name }}</b><small>{{ p.role }}</small></span>
+              @if (!isContact(p.name)) { <span class="pill warn">Hors contacts</span> }
+            </button>
+          } @empty {
+            <p class="none">Aucune personne trouvée.</p>
+          }
+        </div>
+      }
+
+      <form class="composer" (submit)="sendNew($event)">
+        <input type="text" name="newmsg" placeholder="Écrire un message…" autocomplete="off" aria-label="Message"
+               [value]="newText()" (input)="newText.set($any($event.target).value)">
+        <button type="submit" class="btn btn-primary btn-sm" appRipple [disabled]="!recipient() || !newText().trim()">Envoyer</button>
+      </form>
+    } @else if (list().length === 0) {
+      <div class="blank full">
+        <p>{{ tab() === 'spam' ? 'Les messages envoyés à des personnes qui ne sont pas dans vos contacts arrivent dans leurs indésirables et s’affichent ici.' : 'Aucune conversation pour le moment.' }}</p>
+      </div>
+    } @else {
+      <header>
+        <span class="ava">{{ selected().initials }}</span>
+        <div>
+          <b>{{ selected().name }} @if (selected().verified) { <i class="ver">✓</i> }</b>
+          <small [class.on]="selected().status === 'En ligne'">{{ selected().status }}</small>
+        </div>
+      </header>
+
+      <div class="thread" #thread>
+        @for (m of selected().messages; track $index) {
+          <div class="bubble" [class.me]="m.from === 'me'">
+            @if (m.who) { <small class="who">{{ m.who }}</small> }
+            {{ m.text }}
+            @if (m.share; as s) {
+              <a class="shared" [routerLink]="s.link" [queryParams]="s.query"><b>{{ s.title }}</b>@if (s.sub) { <small>{{ s.sub }}</small> }</a>
+            }
+          </div>
+        }
+      </div>
+
+      @if (selected().spam) {
+        <p class="notice bar" role="status"><app-icon name="alert" />Vous n’êtes pas en contact avec {{ selected().name }} : vos messages arrivent dans ses indésirables (Spam).</p>
+      }
+
+      <form class="composer" (submit)="send($event)">
+        <input type="text" name="msg" placeholder="Écrire un message…" autocomplete="off" aria-label="Message"
+               [value]="draft()" (input)="draft.set($any($event.target).value)">
+        <button type="submit" class="btn btn-primary btn-sm" appRipple [disabled]="!draft().trim()">Envoyer</button>
+      </form>
+    }
+  </section>
+</div>

@@ -1,0 +1,258 @@
+/* =========================================================
+   1. TOKENS — mode clair (défaut) + mode sombre
+   Couleurs échantillonnées sur les maquettes ; dégradés
+   issus de _code_css.txt (avatar : #489e67 → #277885)
+   ========================================================= */
+:root {
+  color-scheme: light;
+
+  --bg:            #f4f6f9;
+  --text:          #0e1722;
+  --text-muted:    #5b6b7b;
+  --nav:           #5b6b7b;
+  --border:        #d8dfe7;
+  --border-strong: #c3ceda;
+
+  --accent:        #5bc46a;            /* boutons, aiguille */
+  --accent-ink:    #2c7a3d;            /* « vérifié. » */
+  --on-accent:     #0e1722;
+
+  --card:          #ffffff;
+  --card-shadow:   0 14px 34px rgba(18, 35, 63, .10), 0 2px 6px rgba(18, 35, 63, .05);
+  --feature-bg:    #ffffff;
+  --feature-bd:    #dde3ea;
+
+  --badge-bg:      #dff3e3;
+  --badge-fg:      #1f6b33;
+  --tag-bg:        #fde8d8;
+  --tag-fg:        #a8470f;
+  --track:         #dfe6ee;
+
+  --logo:          #12233f;
+
+  /* boussole */
+  --c-ring:        #12233f;
+  --c-in-1:        #e9f6ec;
+  --c-in-2:        #d3ecd8;
+  --star:          #6f7b8c;
+  --needle-a:      #5bc46a;
+  --needle-b:      #3f9a4d;
+  --needle-c:      #2f7a3a;
+  --needle-d:      #3d8f48;
+  --pivot-core:    #12233f;
+  --orbit:         #c3d0dc;
+  --orbit-2-op:    0;
+
+  /* halo derrière la boussole */
+  --glow: radial-gradient(circle, rgba(92,196,106,.24) 0%, rgba(92,196,106,.12) 38%, rgba(92,196,106,0) 68%);
+  --glow-size:     1060px;
+  --glow-x:        -230px;
+  --glow-y:        -150px;
+
+  /* positions (px) dans la scène 544×560 */
+  --cx: 270px;  --cy: 274px;
+  --p-x: 17px;   --p-y: 53px;   --p-w: 228px;
+  --d-x: -13px;  --d-y: 462px;  --d-w: 259px;
+  --t-x: 314px;  --t-y: 402px;  --t-w: 229px;
+
+  --btn-ghost-bg:  rgba(255,255,255,.55);
+  --lift:          56px;
+
+  --dark-display:  none;
+  --light-display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --_dark: 1; }
+}
+
+/* Les valeurs sombres sont déclarées deux fois (système + choix manuel) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:            #0e1621;
+  --text:          #f1f5f9;
+  --text-muted:    #94a3b8;
+  --nav:           #98a8bd;
+  --border:        #2e4560;
+  --border-strong: #34506e;
+
+  --accent:        #5bc46a;
+  --accent-ink:    #5bc46a;
+  --on-accent:     #0e1621;
+
+  --card:          rgba(13, 22, 34, .88);
+  --card-shadow:   none;
+  --feature-bg:    transparent;
+  --feature-bd:    #2a4058;
+
+  --badge-bg:      #16341f;
+  --badge-fg:      #6fd08a;
+  --tag-bg:        #3a2a1c;
+  --tag-fg:        #f0a25a;
+  --track:         #1f2f45;
+
+  --logo:          #f1f5f9;
+
+  --c-ring:        #f1f5f9;
+  --c-in-1:        #1f4a3a;
+  --c-in-2:        #10281f;
+  --star:          #8b98b0;
+  --needle-a:      #5bc46a;
+  --needle-b:      #3f9a4d;
+  --needle-c:      #2a5e24;
+  --needle-d:      #2f6f35;
+  --pivot-core:    #0e1621;
+  --orbit:         #1e2e40;
+  --orbit-2-op:    1;
+
+  --glow: radial-gradient(circle, rgba(46,120,96,.20) 0%, rgba(46,120,96,.08) 40%, rgba(46,120,96,0) 68%);
+  --glow-size:     760px;
+  --glow-x:        -60px;
+  --glow-y:        -20px;
+
+  --cx: 326px;  --cy: 260px;
+  --p-x: 0px;    --p-y: 10px;   --p-w: 264px;
+  --d-x: 0px;    --d-y: 444px;  --d-w: 264px;
+  --t-x: 336px;  --t-y: 444px;  --t-w: 248px;
+
+  --btn-ghost-bg:  transparent;
+  --lift:          0px;
+
+  --dark-display:  block;
+  --light-display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg:            #0e1621;
+    --text:          #f1f5f9;
+    --text-muted:    #94a3b8;
+    --nav:           #98a8bd;
+    --border:        #2e4560;
+    --border-strong: #34506e;
+
+    --accent:        #5bc46a;
+    --accent-ink:    #5bc46a;
+    --on-accent:     #0e1621;
+
+    --card:          rgba(13, 22, 34, .88);
+    --card-shadow:   none;
+    --feature-bg:    transparent;
+    --feature-bd:    #2a4058;
+
+    --badge-bg:      #16341f;
+    --badge-fg:      #6fd08a;
+    --tag-bg:        #3a2a1c;
+    --tag-fg:        #f0a25a;
+    --track:         #1f2f45;
+
+    --logo:          #f1f5f9;
+
+    --c-ring:        #f1f5f9;
+    --c-in-1:        #1f4a3a;
+    --c-in-2:        #10281f;
+    --star:          #8b98b0;
+    --needle-a:      #5bc46a;
+    --needle-b:      #3f9a4d;
+    --needle-c:      #2a5e24;
+    --needle-d:      #2f6f35;
+    --pivot-core:    #0e1621;
+    --orbit:         #1e2e40;
+    --orbit-2-op:    1;
+
+    --glow: radial-gradient(circle, rgba(46,120,96,.20) 0%, rgba(46,120,96,.08) 40%, rgba(46,120,96,0) 68%);
+    --glow-size:     760px;
+    --glow-x:        -60px;
+    --glow-y:        -20px;
+
+    --cx: 326px;  --cy: 260px;
+    --p-x: 0px;    --p-y: 10px;   --p-w: 264px;
+    --d-x: 0px;    --d-y: 444px;  --d-w: 264px;
+    --t-x: 336px;  --t-y: 444px;  --t-w: 248px;
+
+    --btn-ghost-bg:  transparent;
+  --lift:          0px;
+
+    --dark-display:  block;
+    --light-display: none;
+  }
+}
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .25s ease, color .25s ease;
+}
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 12px; }
+
+
+/* =========================================================
+   BOUTONS (partagés : en-tête + hero)
+   ========================================================= */
+.btn {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 24px;
+  border-radius: 999px;
+  font: inherit; font-size: 16px; font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .25s ease, background-color .15s ease, border-color .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: scale(.96); }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: #6ccf7b; box-shadow: 0 8px 22px rgba(91, 196, 106, .3); }
+.btn-ghost { background: var(--btn-ghost-bg); color: var(--text); border-color: var(--border-strong); }
+.btn-ghost:hover { border-color: var(--text-muted); }
+
+.ripple {
+  position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px;
+  border-radius: 50%; background: currentColor; opacity: .25;
+  transform: scale(0); animation: ripple .6s ease-out forwards; pointer-events: none;
+}
+
+/* =========================================================
+   ANIMATIONS PARTAGÉES
+   ========================================================= */
+html { scroll-behavior: smooth; }
+
+@keyframes rise    { from { opacity: 0; transform: translateY(22px); } }
+@keyframes pop     { from { opacity: 0; transform: translateY(18px) scale(.94); } }
+@keyframes bob     { 50% { translate: 0 -8px; } }
+@keyframes breathe { from { transform: scale(.95); } to { transform: scale(1.05); } }
+@keyframes fillbar { from { width: 0; } }
+@keyframes shine   { to { transform: translateX(100%); } }
+@keyframes orbit   { 0% { opacity: .9; } 100% { opacity: .15; } }
+@keyframes ripple  { to { transform: scale(14); opacity: 0; } }
+@keyframes spinin  { from { transform: rotate(-90deg) scale(.5); opacity: 0; } }
+
+/* apparition au scroll (directive appReveal) */
+.js .reveal:not(.in) { opacity: 0; transform: translateY(26px); }
+.reveal.in { animation: rise .8s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--d, 0) * 110ms); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+
+/* photo de profil dans les petits avatars (fil, menu, commentaires…) : elle remplace les initiales */
+.avatar, .av, .me { overflow: hidden; }
+.avatar img, .av img, .me img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }

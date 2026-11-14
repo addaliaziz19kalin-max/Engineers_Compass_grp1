@@ -1,0 +1,38 @@
+<section class="hero">
+  <h1>Comment pouvons-nous vous aider ?</h1>
+  <label class="search">
+    <app-icon name="search" />
+    <input type="search" placeholder="Rechercher dans le centre d’aide" aria-label="Rechercher dans le centre d’aide"
+           [value]="query()" (input)="query.set($any($event.target).value)">
+  </label>
+</section>
+
+<div class="wrap">
+  <div class="cats">
+    @for (c of shownCats(); track c.title; let i = $index) {
+      <a class="panel cat a" href="#" [style.--i]="i" (click)="$event.preventDefault(); query.set(c.title)">
+        <span class="ico"><app-icon [name]="c.icon" /></span>
+        <b>{{ c.title }}</b>
+        <small>{{ c.sub }}</small>
+      </a>
+    }
+  </div>
+
+  <section class="panel faq a" style="--i:3">
+    <h2>Questions fréquentes</h2>
+    @for (f of shownFaq(); track f.q; let i = $index) {
+      <div class="q" [class.open]="open() === i">
+        <button type="button" [attr.aria-expanded]="open() === i" (click)="toggle(i)">{{ f.q }}<app-icon name="chev-right" /></button>
+        @if (open() === i) { <p>{{ f.a }}</p> }
+      </div>
+    } @empty {
+      <p class="none">Aucune réponse trouvée. Essayez d’autres mots ou contactez l’équipe.</p>
+    }
+  </section>
+
+  <section class="panel contact a" style="--i:4">
+    <span class="ico"><app-icon name="message" /></span>
+    <div><b>Vous ne trouvez pas votre réponse ?</b><small>Contactez l’équipe ou utilisez le chatbot d’assistance.</small></div>
+    <a class="btn btn-primary btn-sm" routerLink="/contact" appRipple>Nous contacter</a>
+  </section>
+</div>

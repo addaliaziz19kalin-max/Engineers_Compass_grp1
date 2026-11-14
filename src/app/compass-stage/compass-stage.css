@@ -1,0 +1,82 @@
+/* ---------- scène (boussole + cartes flottantes) ---------- */
+:host { display: block; }
+.stage { position: relative; z-index: 1; width: 544px; height: 560px; }
+.compass {
+  position: absolute; width: 560px; height: 560px;
+  left: calc(var(--cx) - 280px); top: calc(var(--cy) - 280px);
+  overflow: visible;
+}
+
+/* couleurs de la boussole : fondu au changement de thème */
+.compass * { transition: fill .4s, stroke .4s; }
+
+/* survol : orbites vertes qui pulsent, pointes cardinales qui grossissent */
+.orbit { transition: stroke .4s; }
+.stage.hot .orbit { stroke: var(--accent) !important; animation: orbit 1.8s ease-out infinite; }
+.stage.hot .orbit-2 { animation-delay: .6s; }
+.pt { transform-box: fill-box; transform-origin: center; transition: transform .5s cubic-bezier(.34,1.56,.64,1), fill .3s; }
+.stage.hot .pt { transform: scale(1.25); fill: var(--accent); }
+
+.float {
+  position: absolute; z-index: 2;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--card-shadow);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  padding: 16px 18px;
+
+  /* parallaxe (--px/--py posés par le composant) + apparition + flottement */
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  transition: transform .3s ease-out, border-color .3s, box-shadow .3s, background-color .4s;
+  animation: pop .8s cubic-bezier(.2,.8,.2,1) backwards, bob 5s ease-in-out infinite;
+  animation-delay: calc(var(--d, 0) * 140ms + 500ms), var(--bd, 0s);
+}
+.float strong { display: block; font-size: 16px; font-weight: 700; line-height: 1.25; }
+.float span.sub { display: block; font-size: 15px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+.stage.hot .float { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 14px 34px rgba(91, 196, 106, .2); }
+
+.f-profile { --d: 0; --bd: 0s; left: var(--p-x); top: var(--p-y); width: var(--p-w); display: flex; align-items: center; gap: 12px; padding: 18px; }
+.avatar {
+  flex: none; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #489e67, #277885);
+  color: #0e1621; font-weight: 800; font-size: 16px;
+}
+.f-challenge { --d: 1; --bd: -1.6s; left: var(--d-x); top: var(--d-y); width: var(--d-w); padding: 16px 18px 18px; }
+.tag {
+  display: inline-block; margin-bottom: 10px;
+  padding: 3px 12px; border-radius: 999px;
+  background: var(--tag-bg); color: var(--tag-fg);
+  font-size: 12px; font-weight: 600;
+  transition: background-color .4s, color .4s;
+}
+.f-test { --d: 2; --bd: -3.2s; left: var(--t-x); top: var(--t-y); width: var(--t-w); }
+
+.bar { height: 6px; margin: 9px 0 10px; border-radius: 99px; background: var(--track); overflow: hidden; }
+.bar i {
+  position: relative; overflow: hidden;
+  display: block; height: 100%; width: 92%; border-radius: inherit; background: var(--accent);
+  animation: fillbar 1.4s cubic-bezier(.2,.8,.2,1) 1s backwards;
+}
+.bar i::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: translateX(-100%);
+}
+.stage.hot .bar i::after { animation: shine 1.4s ease-in-out infinite; }
+
+@media (max-width: 1180px) {
+  .stage { margin: 0 auto; }
+}
+
+/* la scène devient une pile verticale */
+@media (max-width: 680px) {
+  .stage { width: 100%; height: auto; display: grid; gap: 12px; }
+  .compass { position: static; width: min(100%, 340px); height: auto; margin: 0 auto 4px; }
+  .float {
+    position: static; width: auto;
+    animation: pop .8s cubic-bezier(.2,.8,.2,1) backwards;
+    animation-delay: calc(var(--d, 0) * 140ms + 300ms);
+  }
+}

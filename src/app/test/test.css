@@ -1,0 +1,22 @@
+.wrap { max-width: 720px; margin: 0 auto; padding: 28px 24px 72px; }
+.page-title { font-size: 22px; }
+.page-sub { font-size: 11.5px; margin-bottom: 14px; }
+.box { padding: 20px; }
+.meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 11.5px; font-weight: 700; color: var(--text-muted); }
+.pill { display: inline-flex; align-items: center; gap: 5px; }
+h2 { margin: 20px 0 16px; font-size: 16px; font-weight: 800; line-height: 1.4; }
+.opts { display: grid; gap: 10px; }
+.opts button {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: transparent;
+  font: inherit; font-size: 13px; color: var(--text); text-align: left; cursor: pointer; transition: border-color .2s, background-color .2s, transform .2s;
+}
+.opts button:hover { transform: translateX(2px); border-color: var(--border-strong); }
+.opts i { position: relative; flex: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border-strong); transition: border-color .2s; }
+.opts i::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--accent); transform: scale(0); transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
+.opts button.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.opts button.on i { border-color: var(--accent); }
+.opts button.on i::after { transform: scale(1); }
+.actions { display: flex; align-items: center; gap: 10px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border); }
+.sp { flex: 1; }
+.actions .btn { width: auto; padding: 0 18px; text-decoration: none; }
+.actions button:disabled { opacity: .5; cursor: default; }

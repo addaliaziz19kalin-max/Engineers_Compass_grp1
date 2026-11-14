@@ -1,0 +1,24 @@
+<app-auth-shell [withFooter]="true">
+  <a slot="actions" routerLink="/connexion">Se connecter</a>
+
+  <section class="err" role="alert">
+    <div class="orb" [class.srv]="info().origin === 'server'">
+      <span class="ring"></span>
+      <app-icon [name]="info().icon" />
+    </div>
+
+    <h1 [class.word]="info().code.length > 3">{{ info().code }}</h1>
+    <h2>{{ info().title }}</h2>
+    <p>{{ info().text }}</p>
+
+    <div class="btns">
+      @for (a of info().actions; track a.label; let i = $index) {
+        <button type="button" class="btn" [class.btn-primary]="i === 0" [class.btn-line]="i > 0" appRipple (click)="run(a)">
+          @if (a.icon) { <app-icon [name]="a.icon" /> }{{ a.label }}
+        </button>
+      }
+    </div>
+
+    <p class="help">Besoin d’aide ? <a routerLink="/aide">Contacter l’équipe</a></p>
+  </section>
+</app-auth-shell>

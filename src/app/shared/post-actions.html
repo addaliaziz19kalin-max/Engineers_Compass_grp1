@@ -1,0 +1,15 @@
+<div class="stats">
+  <span>{{ plural(rx.likes(postId(), baseLikes()), 'réaction', 'réactions') }}</span>
+  <button type="button" class="cnt" (click)="rx.toggleOpen(postId())">{{ plural(rx.count(postId(), seed()), 'commentaire', 'commentaires') }}</button>
+</div>
+<div class="acts" [class.four]="item() !== null">
+  <button type="button" [class.liked]="rx.isLiked(postId())" [attr.aria-pressed]="rx.isLiked(postId())" (click)="rx.toggleLike(postId())"><app-icon name="heart" />J’aime</button>
+  <button type="button" [attr.aria-expanded]="rx.isOpen(postId())" (click)="rx.toggleOpen(postId())"><app-icon name="comment" />Commenter</button>
+  @if (item(); as it) {
+    <app-share-menu [item]="it" [repost]="true" />
+    <button type="button" [class.saved]="isSaved()" [attr.aria-pressed]="isSaved()" (click)="toggleSave()">
+      <app-icon name="bookmark" />{{ isSaved() ? 'Enregistré' : 'Enregistrer' }}
+    </button>
+  }
+</div>
+<app-post-comments [postId]="postId()" [seed]="seed()" />

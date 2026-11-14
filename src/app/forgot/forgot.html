@@ -1,0 +1,32 @@
+<app-auth-shell>
+  <section class="card center" aria-labelledby="t">
+    <div class="badge a" style="--i:0" [class.ok]="sent()">
+      <app-icon [name]="sent() ? 'check' : 'lock'" />
+    </div>
+
+    @if (!sent()) {
+      <h1 id="t" class="a" style="--i:1">Mot de passe oublié ?</h1>
+      <p class="sub a" style="--i:2">Saisissez l’adresse e-mail de votre compte. Nous vous enverrons un lien pour choisir un nouveau mot de passe.</p>
+
+      <form class="left" (submit)="submit($event, email)" novalidate>
+        <div class="field a" style="--i:3">
+          <label for="email">Adresse e-mail</label>
+          <div class="input" [class.err]="invalid()">
+            <app-icon name="mail" />
+            <input #email id="email" type="email" required autocomplete="email" placeholder="prenom.nom@exemple.com" (input)="invalid.set(false)">
+          </div>
+          @if (invalid()) { <p class="msg" role="alert">Saisissez une adresse e-mail valide.</p> }
+        </div>
+
+        <button class="btn btn-primary a" style="--i:4" type="submit" appRipple [disabled]="loading()">
+          @if (loading()) { <span class="spinner" aria-hidden="true"></span> } @else { Envoyer le lien }
+        </button>
+      </form>
+    } @else {
+      <h1 id="t" class="pop-in">Lien envoyé</h1>
+      <p class="sub pop-in">Consultez votre boîte mail et suivez le lien pour choisir un nouveau mot de passe.</p>
+    }
+
+    <a class="back a" style="--i:5" routerLink="/connexion"><app-icon name="arrow-left" /> Retour à la connexion</a>
+  </section>
+</app-auth-shell>
