@@ -1,8 +1,4 @@
-/* =========================================================
-   1. TOKENS — mode clair (défaut) + mode sombre
-   Couleurs échantillonnées sur les maquettes ; dégradés
-   issus de _code_css.txt (avatar : #489e67 → #277885)
-   ========================================================= */
+
 :root {
   color-scheme: light;
 
